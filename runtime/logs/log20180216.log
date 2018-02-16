@@ -1,5 +1,0 @@
-[INFO][article.go:79]2018/02/16 18:33:12 [state 状态只允许0或1]
-[INFO][article.go:79]2018/02/16 18:33:42 [state 状态只允许0或1]
-[INFO][article.go:79]2018/02/16 18:33:42 [tag_id 标签ID必须大于0]
-[INFO][article.go:79]2018/02/16 18:38:39 [state 状态只允许0或1]
-[INFO][article.go:79]2018/02/16 18:38:39 [tag_id 标签ID必须大于0]
