@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
