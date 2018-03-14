@@ -7,11 +7,11 @@ import (
     "github.com/astaxie/beego/validation"
     "github.com/Unknwon/com"
 
-    "gin-blog/pkg/e"
-    "gin-blog/models"
-    "gin-blog/pkg/util"
-    "gin-blog/pkg/setting"
-    "gin-blog/pkg/logging"
+    "github.com/EDDYCJY/go-gin-example/pkg/e"
+    "github.com/EDDYCJY/go-gin-example/models"
+    "github.com/EDDYCJY/go-gin-example/pkg/util"
+    "github.com/EDDYCJY/go-gin-example/pkg/setting"
+    "github.com/EDDYCJY/go-gin-example/pkg/logging"
 )
 
 //获取多个文章标签
