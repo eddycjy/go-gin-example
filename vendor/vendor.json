@@ -21,6 +21,12 @@
 			"revisionTime": "2017-10-19T21:57:19Z"
 		},
 		{
+			"checksumSHA1": "q9bsaNA05ney3eon3nKAE+eLwO4=",
+			"path": "github.com/fvbock/endless",
+			"revision": "447134032cb6a86814f570257390a379982dfc61",
+			"revisionTime": "2017-01-09T17:00:31Z"
+		},
+		{
 			"checksumSHA1": "QeKwBtN2df+j+4stw3bQJ6yO4EY=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",
@@ -99,6 +105,11 @@
 			"revisionTime": "2018-02-05T16:51:14Z"
 		},
 		{
+			"checksumSHA1": "osb18zDjd7/RMAMUuN3qP+w0ewE=",
+			"path": "golang.org/x/sys/unix",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "P/k5ZGf0lEBgpKgkwy++F7K1PSg=",
 			"path": "gopkg.in/go-playground/validator.v8",
 			"revision": "5f1438d3fca68893a817e4a66806cea46a9e4ebf",
@@ -111,5 +122,5 @@
 			"revisionTime": "2018-01-09T11:43:31Z"
 		}
 	],
-	"rootPath": "gin-blog"
+	"rootPath": "github.com/EDDYCJY/go-gin-example"
 }
