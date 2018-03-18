@@ -9,3 +9,4 @@
 - [Gin实践 连载五 搭建Blog API's（四）](https://segmentfault.com/a/1190000013297828)
 - [Gin实践 连载六 搭建Blog API's（五）](https://segmentfault.com/a/1190000013297850)
 - [Gin实践 连载七 Golang优雅重启HTTP服务](https://segmentfault.com/a/1190000013757098)
+- [Gin实践 连载八 为它加上Swagger](https://segmentfault.com/a/1190000013808421)
