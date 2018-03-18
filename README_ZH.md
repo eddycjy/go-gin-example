@@ -67,5 +67,5 @@ Swagger 文档
 - logging
 - Jwt-go
 - Gin
-- Endless
+- Graceful restart or stop (fvbock/endless)
 - App configurable
