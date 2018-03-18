@@ -54,4 +54,5 @@ Swagger doc
 - logging
 - Jwt-go
 - Gin
+- Graceful restart or stop (fvbock/endless)
 - App configurable
