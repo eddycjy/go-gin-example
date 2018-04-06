@@ -32,7 +32,7 @@ func GetTags(c *gin.Context) {
 
     var state int = -1
     if arg := c.Query("state"); arg != "" {
-        state, _ = com.StrTo(arg).Int()
+        state = com.StrTo(arg).MustInt()
         maps["state"] = state
     }
 
@@ -57,7 +57,7 @@ func GetTags(c *gin.Context) {
 // @Router /api/v1/tags [post]
 func AddTag(c *gin.Context) {
     name := c.Query("name")
-    state, _ := com.StrTo(c.DefaultQuery("state", "0")).Int()
+    state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
     createdBy := c.Query("created_by")
 
     valid := validation.Validation{}
@@ -97,7 +97,7 @@ func AddTag(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags/{id} [put]
 func EditTag(c *gin.Context) {
-    id, _ := com.StrTo(c.Param("id")).Int()
+    id := com.StrTo(c.Param("id")).MustInt()
     name := c.Query("name")
     modifiedBy := c.Query("modified_by")
 
@@ -105,7 +105,7 @@ func EditTag(c *gin.Context) {
 
     var state int = -1
     if arg := c.Query("state"); arg != "" {
-        state, _ = com.StrTo(arg).Int()
+        state = com.StrTo(arg).MustInt()
         valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
     }
 
@@ -150,7 +150,7 @@ func EditTag(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags/{id} [delete]
 func DeleteTag(c *gin.Context) {
-    id, _ := com.StrTo(c.Param("id")).Int()
+    id := com.StrTo(c.Param("id")).MustInt()
 
     valid := validation.Validation{}
     valid.Min(id, 1, "id").Message("ID必须大于0")

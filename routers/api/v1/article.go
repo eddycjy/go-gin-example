@@ -1,4 +1,4 @@
-package v1
+ package v1
 
 import (
     "net/http"
@@ -20,7 +20,7 @@ import (
 // @Success 200 {string} json "{"code":200,"data":{"id":3,"created_on":1516937037,"modified_on":0,"tag_id":11,"tag":{"id":11,"created_on":1516851591,"modified_on":0,"name":"312321","created_by":"4555","modified_by":"","state":1},"content":"5555","created_by":"2412","modified_by":"","state":1},"msg":"ok"}"
 // @Router /api/v1/articles/{id} [get]
 func GetArticle(c *gin.Context) {
-    id, _ := com.StrTo(c.Param("id")).Int()
+    id := com.StrTo(c.Param("id")).MustInt()
 
     valid := validation.Validation{}
     valid.Min(id, 1, "id").Message("ID必须大于0")
@@ -61,7 +61,7 @@ func GetArticles(c *gin.Context) {
 
     var state int = -1
     if arg := c.Query("state"); arg != "" {
-        state, _ = com.StrTo(arg).Int()
+        state = com.StrTo(arg).MustInt()
         maps["state"] = state
 
         valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
@@ -69,7 +69,7 @@ func GetArticles(c *gin.Context) {
 
     var tagId int = -1
     if arg := c.Query("tag_id"); arg != "" {
-        tagId, _ = com.StrTo(arg).Int()
+        tagId = com.StrTo(arg).MustInt()
         maps["tag_id"] = tagId
 
         valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
@@ -106,12 +106,12 @@ func GetArticles(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/articles [post]
 func AddArticle(c *gin.Context) {
-    tagId, _ := com.StrTo(c.Query("tag_id")).Int()
+    tagId := com.StrTo(c.Query("tag_id")).MustInt()
     title := c.Query("title")
     desc := c.Query("desc")
     content := c.Query("content")
     createdBy := c.Query("created_by")
-    state, _ := com.StrTo(c.DefaultQuery("state", "0")).Int()
+    state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
 
     valid := validation.Validation{}
     valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
@@ -165,8 +165,8 @@ func AddArticle(c *gin.Context) {
 func EditArticle(c *gin.Context) {
     valid := validation.Validation{}
 
-    id, _ := com.StrTo(c.Param("id")).Int()
-    tagId, _ := com.StrTo(c.Query("tag_id")).Int()
+    id := com.StrTo(c.Param("id")).MustInt()
+    tagId := com.StrTo(c.Query("tag_id")).MustInt()
     title := c.Query("title")
     desc := c.Query("desc")
     content := c.Query("content")
@@ -174,7 +174,7 @@ func EditArticle(c *gin.Context) {
 
     var state int = -1
     if arg := c.Query("state"); arg != "" {
-        state, _ = com.StrTo(arg).Int()
+        state = com.StrTo(arg).MustInt()
         valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
     }
 
@@ -233,7 +233,7 @@ func EditArticle(c *gin.Context) {
 // @Failure 200 {string} json "{"code":400,"data":{},"msg":"请求参数错误"}"
 // @Router /api/v1/articles/{id} [delete]
 func DeleteArticle(c *gin.Context) {
-    id, _ := com.StrTo(c.Param("id")).Int()
+    id := com.StrTo(c.Param("id")).MustInt()
 
     valid := validation.Validation{}
     valid.Min(id, 1, "id").Message("ID必须大于0")
