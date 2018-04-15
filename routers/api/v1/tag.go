@@ -36,6 +36,8 @@ func GetTags(c *gin.Context) {
         maps["state"] = state
     }
 
+    maps["deleted_on"] = 0
+
     code := e.SUCCESS
 
     data["lists"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
@@ -56,9 +58,9 @@ func GetTags(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags [post]
 func AddTag(c *gin.Context) {
-    name := c.Query("name")
-    state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
-    createdBy := c.Query("created_by")
+    name := c.PostForm("name")
+    state := com.StrTo(c.DefaultPostForm("state", "0")).MustInt()
+    createdBy := c.PostForm("created_by")
 
     valid := validation.Validation{}
     valid.Required(name, "name").Message("名称不能为空")
@@ -98,13 +100,13 @@ func AddTag(c *gin.Context) {
 // @Router /api/v1/tags/{id} [put]
 func EditTag(c *gin.Context) {
     id := com.StrTo(c.Param("id")).MustInt()
-    name := c.Query("name")
-    modifiedBy := c.Query("modified_by")
+    name := c.PostForm("name")
+    modifiedBy := c.PostForm("modified_by")
 
     valid := validation.Validation{}
 
     var state int = -1
-    if arg := c.Query("state"); arg != "" {
+    if arg := c.PostForm("state"); arg != "" {
         state = com.StrTo(arg).MustInt()
         valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
     }
@@ -120,6 +122,7 @@ func EditTag(c *gin.Context) {
         if models.ExistTagByID(id) {
             data := make(map[string]interface{})
             data["modified_by"] = modifiedBy
+            data["deleted_on"] = 0
             if name != "" {
                 data["name"] = name
             }

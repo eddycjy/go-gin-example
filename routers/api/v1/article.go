@@ -60,7 +60,7 @@ func GetArticles(c *gin.Context) {
     valid := validation.Validation{}
 
     var state int = -1
-    if arg := c.Query("state"); arg != "" {
+    if arg := c.PostForm("state"); arg != "" {
         state = com.StrTo(arg).MustInt()
         maps["state"] = state
 
@@ -68,12 +68,14 @@ func GetArticles(c *gin.Context) {
     }
 
     var tagId int = -1
-    if arg := c.Query("tag_id"); arg != "" {
+    if arg := c.PostForm("tag_id"); arg != "" {
         tagId = com.StrTo(arg).MustInt()
         maps["tag_id"] = tagId
 
         valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
-    } 
+    }
+
+    maps["deleted_on"] = 0
 
     code := e.INVALID_PARAMS
     if ! valid.HasErrors() {
@@ -106,12 +108,12 @@ func GetArticles(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/articles [post]
 func AddArticle(c *gin.Context) {
-    tagId := com.StrTo(c.Query("tag_id")).MustInt()
-    title := c.Query("title")
-    desc := c.Query("desc")
-    content := c.Query("content")
-    createdBy := c.Query("created_by")
-    state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
+    tagId := com.StrTo(c.PostForm("tag_id")).MustInt()
+    title := c.PostForm("title")
+    desc := c.PostForm("desc")
+    content := c.PostForm("content")
+    createdBy := c.PostForm("created_by")
+    state := com.StrTo(c.DefaultPostForm("state", "0")).MustInt()
 
     valid := validation.Validation{}
     valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
@@ -166,14 +168,14 @@ func EditArticle(c *gin.Context) {
     valid := validation.Validation{}
 
     id := com.StrTo(c.Param("id")).MustInt()
-    tagId := com.StrTo(c.Query("tag_id")).MustInt()
-    title := c.Query("title")
-    desc := c.Query("desc")
-    content := c.Query("content")
-    modifiedBy := c.Query("modified_by")
+    tagId := com.StrTo(c.PostForm("tag_id")).MustInt()
+    title := c.PostForm("title")
+    desc := c.PostForm("desc")
+    content := c.PostForm("content")
+    modifiedBy := c.PostForm("modified_by")
 
     var state int = -1
-    if arg := c.Query("state"); arg != "" {
+    if arg := c.PostForm("state"); arg != "" {
         state = com.StrTo(arg).MustInt()
         valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
     }
