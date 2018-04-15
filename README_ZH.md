@@ -15,6 +15,7 @@
 - [Gin实践 连载七 Golang优雅重启HTTP服务](https://segmentfault.com/a/1190000013757098)
 - [Gin实践 连载八 为它加上Swagger](https://segmentfault.com/a/1190000013808421)
 - [Gin实践 连载九 将Golang应用部署到Docker](https://segmentfault.com/a/1190000013960558)
+- [Gin实践 连载十 定制 GORM Callbacks](https://segmentfault.com/a/1190000014393602)
 - [Gin实践 番外 Golang交叉编译](https://segmentfault.com/a/1190000013989448)
 
 ## 安装
