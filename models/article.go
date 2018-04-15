@@ -7,7 +7,7 @@ type Article struct {
 	Tag   Tag `json:"tag"`
 
 	Title      string `json:"title"`
-	Desc       string `json:"title"`
+	Desc       string `json:"desc"`
 	Content    string `json:"content"`
 	CreatedBy  string `json:"created_by"`
 	ModifiedBy string `json:"modified_by"`
