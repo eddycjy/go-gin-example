@@ -58,3 +58,4 @@ Swagger doc
 - Gin
 - Graceful restart or stop (fvbock/endless)
 - App configurable
+- Cron

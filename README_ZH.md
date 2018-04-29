@@ -16,6 +16,7 @@
 - [Gin实践 连载八 为它加上Swagger](https://segmentfault.com/a/1190000013808421)
 - [Gin实践 连载九 将Golang应用部署到Docker](https://segmentfault.com/a/1190000013960558)
 - [Gin实践 连载十 定制 GORM Callbacks](https://segmentfault.com/a/1190000014393602)
+- [Gin实践 连载十一 Cron定时任务](https://segmentfault.com/a/1190000014666453)
 - [Gin实践 番外 Golang交叉编译](https://segmentfault.com/a/1190000013989448)
 
 ## 安装
@@ -72,3 +73,4 @@ Swagger 文档
 - Gin
 - Graceful restart or stop (fvbock/endless)
 - App configurable
+- Cron
