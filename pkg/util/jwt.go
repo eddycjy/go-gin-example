@@ -2,6 +2,8 @@ package util
 
 import (
 	"time"
+	"crypto/md5"
+	"encoding/hex"
 
 	jwt "github.com/dgrijalva/jwt-go"
 
@@ -21,8 +23,8 @@ func GenerateToken(username, password string) (string, error) {
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
-		username,
-		password,
+		encodeMD5(username),
+		encodeMD5(password),
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "gin-blog",
@@ -47,4 +49,11 @@ func ParseToken(token string) (*Claims, error) {
 	}
 
 	return nil, err
+}
+
+func encodeMD5(value string) string {
+	m := md5.New()
+	m.Write([]byte(value))
+
+	return hex.EncodeToString(m.Sum(nil))
 }
