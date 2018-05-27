@@ -2,15 +2,12 @@ package util
 
 import (
 	"time"
-	"crypto/md5"
-	"encoding/hex"
-
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 )
 
-var jwtSecret = []byte(setting.JwtSecret)
+var jwtSecret = []byte(setting.AppSetting.JwtSecret)
 
 type Claims struct {
 	Username string `json:"username"`
@@ -23,8 +20,8 @@ func GenerateToken(username, password string) (string, error) {
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
-		encodeMD5(username),
-		encodeMD5(password),
+		EncodeMD5(username),
+		EncodeMD5(password),
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "gin-blog",
@@ -51,9 +48,3 @@ func ParseToken(token string) (*Claims, error) {
 	return nil, err
 }
 
-func encodeMD5(value string) string {
-	m := md5.New()
-	m.Write([]byte(value))
-
-	return hex.EncodeToString(m.Sum(nil))
-}
