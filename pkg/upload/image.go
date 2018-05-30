@@ -1,16 +1,16 @@
 package upload
 
 import (
+	"fmt"
+	"log"
+	"mime/multipart"
 	"os"
 	"path"
-	"log"
-	"fmt"
 	"strings"
-	"mime/multipart"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/file"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/logging"
+	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
 )
 

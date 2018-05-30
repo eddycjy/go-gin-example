@@ -1,8 +1,8 @@
 package util
 
 import (
-	"time"
 	"github.com/dgrijalva/jwt-go"
+	"time"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 )
@@ -47,4 +47,3 @@ func ParseToken(token string) (*Claims, error) {
 
 	return nil, err
 }
-
