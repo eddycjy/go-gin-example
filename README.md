@@ -59,3 +59,4 @@ Swagger doc
 - Graceful restart or stop (fvbock/endless)
 - App configurable
 - Cron
+- Redis
