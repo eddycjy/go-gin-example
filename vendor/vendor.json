@@ -111,6 +111,18 @@
 			"revisionTime": "2018-02-02T18:43:18Z"
 		},
 		{
+			"checksumSHA1": "w3QCCIYHgZzIXQ+xTl7oLfFrXHs=",
+			"path": "github.com/gomodule/redigo/internal",
+			"revision": "9352ab68be133885e31a43661cc42a220cb8e821",
+			"revisionTime": "2018-04-01T19:18:55Z"
+		},
+		{
+			"checksumSHA1": "HgOVOUtWUYHcNe8aipwuEZ7YLow=",
+			"path": "github.com/gomodule/redigo/redis",
+			"revision": "9352ab68be133885e31a43661cc42a220cb8e821",
+			"revisionTime": "2018-04-01T19:18:55Z"
+		},
+		{
 			"checksumSHA1": "jRWbbdIQ/BXRn7ZEn6ARKxNMuts=",
 			"path": "github.com/jinzhu/gorm",
 			"revision": "6e1387b44c64dce50b89c2f56ed425f5f73e417c",
@@ -127,6 +139,12 @@
 			"path": "github.com/jinzhu/inflection",
 			"revision": "1c35d901db3da928c72a72d8458480cc9ade058f",
 			"revisionTime": "2017-01-02T12:52:26Z"
+		},
+		{
+			"checksumSHA1": "EFoWu07IyDmIvpWV/cugOfO8BR8=",
+			"path": "github.com/json-iterator/go",
+			"revision": "f89479f5c0d83b365504d632ab57390447bb406a",
+			"revisionTime": "2018-04-08T00:25:46Z"
 		},
 		{
 			"checksumSHA1": "T8soMJArSZrYnhmdpAnq1bVxQ6Q=",
@@ -151,6 +169,18 @@
 			"path": "github.com/mattn/go-isatty",
 			"revision": "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c",
 			"revisionTime": "2017-11-07T05:05:31Z"
+		},
+		{
+			"checksumSHA1": "ZTcgWKWHsrX0RXYVXn5Xeb8Q0go=",
+			"path": "github.com/modern-go/concurrent",
+			"revision": "bacd9c7ef1dd9b15be4a9909b8ac7a4e313eec94",
+			"revisionTime": "2018-03-06T01:26:44Z"
+		},
+		{
+			"checksumSHA1": "TyxdmX5pTsJDUZ1406j+GLuzk5E=",
+			"path": "github.com/modern-go/reflect2",
+			"revision": "05fbef0ca5da472bbf96c9322b84a53edc03c9fd",
+			"revisionTime": "2018-03-20T13:32:07Z"
 		},
 		{
 			"checksumSHA1": "H58GLzZlyb7pZwiW/rNqOFwWLyw=",
