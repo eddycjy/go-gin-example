@@ -11,6 +11,10 @@ $ go get github.com/EDDYCJY/go-gin-example
 
 ## How to run
 
+### Required
+
+- Redis
+
 ### Ready
 
 Create a **blog database** and import [SQL](https://github.com/EDDYCJY/go-gin-example/blob/master/docs/sql/blog.sql)

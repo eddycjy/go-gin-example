@@ -18,6 +18,7 @@
 - [Gin实践 连载十 定制 GORM Callbacks](https://segmentfault.com/a/1190000014393602)
 - [Gin实践 连载十一 Cron定时任务](https://segmentfault.com/a/1190000014666453)
 - [Gin实践 连载十二 优化配置结构及实现图片上传](https://segmentfault.com/a/1190000015051346)
+- [Gin实践 连载十三 优化你的应用结构和实现Redis缓存](https://segmentfault.com/a/1190000015140508)
 - [Gin实践 番外 Golang交叉编译](https://segmentfault.com/a/1190000013989448)
 
 ## 安装
@@ -26,6 +27,10 @@ $ go get github.com/EDDYCJY/go-gin-example
 ```
 
 ## 如何运行
+
+### 必须
+
+- Redis
 
 ### 准备
 
