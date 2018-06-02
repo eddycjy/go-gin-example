@@ -6,7 +6,6 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/gredis"
 	"github.com/EDDYCJY/go-gin-example/pkg/logging"
 	"github.com/EDDYCJY/go-gin-example/service/cache_service"
-	"log"
 )
 
 type Article struct {
@@ -69,7 +68,6 @@ func (a *Article) Get() (*models.Article, error) {
 	}
 
 	article, err := models.GetArticle(a.ID)
-	log.Print(article)
 	if err != nil {
 		return nil, err
 	}
