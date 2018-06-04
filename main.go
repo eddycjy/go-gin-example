@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"syscall"
+	"net/http"
+	"runtime"
 
 	"github.com/fvbock/endless"
 
@@ -27,12 +29,29 @@ func main() {
 	logging.Setup()
 	gredis.Setup()
 
-	endless.DefaultReadTimeOut = setting.ServerSetting.ReadTimeout
-	endless.DefaultWriteTimeOut = setting.ServerSetting.WriteTimeout
-	endless.DefaultMaxHeaderBytes = 1 << 20
+	routersInit := routers.InitRouter()
+	readTimeout := setting.ServerSetting.ReadTimeout
+	writeTimeout := setting.ServerSetting.WriteTimeout
 	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)
+	maxHeaderBytes := 1 << 20
 
-	server := endless.NewServer(endPoint, routers.InitRouter())
+	if runtime.GOOS == "windows" {
+		server := &http.Server{
+			Addr:           endPoint,
+			Handler:        routersInit,
+			ReadTimeout:    readTimeout,
+			WriteTimeout:   writeTimeout,
+			MaxHeaderBytes: maxHeaderBytes,
+		}
+
+		server.ListenAndServe()
+		return
+	}
+
+	endless.DefaultReadTimeOut = readTimeout
+	endless.DefaultWriteTimeOut = writeTimeout
+	endless.DefaultMaxHeaderBytes = maxHeaderBytes
+	server := endless.NewServer(endPoint, routersInit)
 	server.BeforeBegin = func(add string) {
 		log.Printf("Actual pid is %d", syscall.Getpid())
 	}
