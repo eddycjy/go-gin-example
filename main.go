@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"syscall"
 	"net/http"
 	"runtime"
+	"syscall"
 
 	"github.com/fvbock/endless"
 

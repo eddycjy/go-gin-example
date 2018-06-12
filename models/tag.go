@@ -42,7 +42,7 @@ func AddTag(name string, state int, createdBy string) error {
 
 func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 	var tags []Tag
-	if pageSize > 0 && pageNum > 0{
+	if pageSize > 0 && pageNum > 0 {
 		db = db.Offset(pageNum).Limit(pageSize)
 	}
 

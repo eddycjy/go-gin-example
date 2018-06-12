@@ -10,11 +10,11 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"github.com/EDDYCJY/go-gin-example/middleware/jwt"
+	"github.com/EDDYCJY/go-gin-example/pkg/export"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/upload"
 	"github.com/EDDYCJY/go-gin-example/routers/api"
 	"github.com/EDDYCJY/go-gin-example/routers/api/v1"
-	"github.com/EDDYCJY/go-gin-example/pkg/export"
 )
 
 func InitRouter() *gin.Engine {
