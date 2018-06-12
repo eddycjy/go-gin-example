@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "0B4uLveIgNc0lo7yyFvrGkCETXA=",
+			"path": "github.com/360EntSecGroup-Skylar/excelize",
+			"revision": "9e463b4614348b3ddc04b1fedd5d662845ce0fb9",
+			"revisionTime": "2018-05-27T03:25:55Z"
+		},
+		{
 			"checksumSHA1": "nJrp/CKnvpO+vzTfOeR8qmzRZ4c=",
 			"path": "github.com/PuerkitoBio/purell",
 			"revision": "975f53781597ed779763b7b65566e74c4004d8de",
@@ -199,6 +205,12 @@
 			"path": "github.com/swaggo/swag",
 			"revision": "003fc1e3c7d847801d3cd06d8be75fe7e4312c4c",
 			"revisionTime": "2018-03-13T08:51:04Z"
+		},
+		{
+			"checksumSHA1": "AqJVYS/Pe4SKQ8Czo9w9S7Yh9X8=",
+			"path": "github.com/tealeg/xlsx",
+			"revision": "f36fa3be8893d528004c0938e06b65c67f69b76f",
+			"revisionTime": "2018-04-19T19:51:53Z"
 		},
 		{
 			"checksumSHA1": "zZdLV/WBF/TaJd6cTT+adZ7UfoI=",

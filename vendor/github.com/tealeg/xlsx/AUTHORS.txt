@@ -1,0 +1,54 @@
+ACHER <artem.chernyak@monsanto.com>
+Andrew Schwartz <andrew.schwartz@gengo.com>
+Artem Chernyak <artemchernyak@Artems-MacBook-Air.local>
+Artem Chernyak <artemchernyak@gmail.com>
+blackss2 <blackss2@nate.com>
+Brandon Mulcahy <brandon@jangler.info>
+Brian Smith <ohohvi@gmail.com>
+bronze1man <bronze1man@gmail.com>
+Bruno Bigras <bigras.bruno@gmail.com>
+Chris Glass <tribaal@gmail.com>
+Colin Fox <colin.fox@cumul8.com>
+Colin Fox <greenenergy@gmail.com>
+crahles <christoph@rahles.de>
+Daniel Upton <daniel@floppy.co>
+Daniel YC Lin <dlin@u40>
+DerLinkshaender <mail@arminhanisch.de>
+Eric <ericscottlagergren@gmail.com>
+frogs <frogs@frogss-MacBook-Air.local>
+fzerorubigd <fzerorubigd@gmail.com>
+Geoffrey J. Teale <geoffrey.teale@canonical.com>
+Gyu-Ho Lee <gyuho.cs@gmail.com>
+Herman Schaaf <hermanschaaf@gmail.com>
+Hugh Gao <email@klniu.com>
+Iain Lowe <i.lowe@mademediacorp.com>
+ivnivnch <ivnivnch@gmail.com>
+Jason Hall <imjasonh@gmail.com>
+Joshua Baker <joshua.baker@cumul8.com>
+Kaur Kuut <strom@nevermore.ee>
+Lunny Xiao <xiaolunwen@gmail.com>
+magician1 <kouta-k@mbm.nifty.com>
+Mathias Fredriksson <mafredri@gmail.com>
+Matt Aimonetti <mattaimonetti@gmail.com>
+Moch. Lutfi <kapten_lufi@yahoo.co.id>
+Moch.Lutfi <kapten_lufi@yahoo.co.id>
+Neoin <Heinoldewage@gmail.com>
+Nguyen Nguyen <ntn@NTN.local>
+Nikita Danilov <mirt@mirt.su>
+OneOfOne <OneOfOne@gmail.com>
+Peter Waller <p@pwaller.net>
+Philipp Klose <TheHippo@users.noreply.github.com>
+richard bucker <richard@bucker.net>
+Shawn Milochik <shawn@milochik.com>
+Shawn Smith <shawnpsmith@gmail.com>
+Shawn Smith <shawn.smith@gengo.com>
+SHIMADA Koji <koji.shimada@enishi-tech.com>
+Steven Degutis <steven.degutis@gmail.com>
+takuya sato <sato-taku@klab.com>
+Thieu Pham <thieu.pham@workiva.com>
+Tormod Erevik Lea <tormodlea@gmail.com>
+trinchan <andrew.schwartz@gengo.com>
+U-NORTH_AMERICA\ACHER <ACHER@PBECRLK.na.ds.monsanto.com>
+YAMADA Tsuyoshi <tyamada@minimum2scp.org>
+Yoshiki Shibukawa <shibukawa.yoshiki@dena.jp>
+zhcy <zhangchenyu2009@gmail.com>
