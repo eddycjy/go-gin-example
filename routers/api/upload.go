@@ -11,6 +11,11 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/upload"
 )
 
+// @Summary 上传图片
+// @Produce  json
+// @Param image post file true "图片文件"
+// @Success 200 {string} json "{"code":200,"data":{"image_save_url":"upload/images/96a.jpg", "image_url": "http://..."}"
+// @Router /api/v1/tags/import [post]
 func UploadImage(c *gin.Context) {
 	appG := app.Gin{C: c}
 	file, image, err := c.Request.FormFile("image")
