@@ -3,7 +3,7 @@ package export
 import "github.com/EDDYCJY/go-gin-example/pkg/setting"
 
 func GetExcelFullUrl(name string) string {
-	return setting.AppSetting.ImagePrefixUrl + "/" + GetExcelPath() + name
+	return setting.AppSetting.PrefixUrl + "/" + GetExcelPath() + name
 }
 
 func GetExcelPath() string {
