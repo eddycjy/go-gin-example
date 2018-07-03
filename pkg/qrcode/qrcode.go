@@ -3,21 +3,21 @@ package qrcode
 import (
 	"image/jpeg"
 
-	"github.com/boombuler/barcode/qr"
 	"github.com/boombuler/barcode"
+	"github.com/boombuler/barcode/qr"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/util"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/file"
+	"github.com/EDDYCJY/go-gin-example/pkg/setting"
+	"github.com/EDDYCJY/go-gin-example/pkg/util"
 )
 
 type QrCode struct {
-	URL string
-	Width int
+	URL    string
+	Width  int
 	Height int
-	Ext string
-	Level qr.ErrorCorrectionLevel
-	Mode qr.Encoding
+	Ext    string
+	Level  qr.ErrorCorrectionLevel
+	Mode   qr.Encoding
 }
 
 const (
@@ -26,12 +26,12 @@ const (
 
 func NewQrCode(url string, width, height int, level qr.ErrorCorrectionLevel, mode qr.Encoding) *QrCode {
 	return &QrCode{
-		URL: url,
-		Width: width,
+		URL:    url,
+		Width:  width,
 		Height: height,
-		Level: level,
-		Mode: mode,
-		Ext: EXT_JPG,
+		Level:  level,
+		Mode:   mode,
+		Ext:    EXT_JPG,
 	}
 }
 

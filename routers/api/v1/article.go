@@ -9,11 +9,11 @@ import (
 
 	"github.com/EDDYCJY/go-gin-example/pkg/app"
 	"github.com/EDDYCJY/go-gin-example/pkg/e"
+	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
 	"github.com/EDDYCJY/go-gin-example/service/article_service"
 	"github.com/EDDYCJY/go-gin-example/service/tag_service"
-	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
 	"github.com/boombuler/barcode/qr"
 )
 
@@ -303,7 +303,7 @@ const (
 func GenerateArticlePoster(c *gin.Context) {
 	appG := app.Gin{c}
 	article := &article_service.Article{}
-	qr := qrcode.NewQrCode(QRCODE_URL, 300, 300, qr.M, qr.Auto)	// 目前写死 gin 系列路径，可自行增加业务逻辑
+	qr := qrcode.NewQrCode(QRCODE_URL, 300, 300, qr.M, qr.Auto) // 目前写死 gin 系列路径，可自行增加业务逻辑
 	posterName := article_service.GetPosterFlag() + "-" + qrcode.GetQrCodeFileName(qr.URL) + qr.GetQrCodeExt()
 	articlePoster := article_service.NewArticlePoster(posterName, article, qr)
 	articlePosterBgService := article_service.NewArticlePosterBg(
@@ -328,7 +328,7 @@ func GenerateArticlePoster(c *gin.Context) {
 	}
 
 	appG.Response(http.StatusOK, e.SUCCESS, map[string]string{
-		"poster_url" : qrcode.GetQrCodeFullUrl(posterName),
-		"poster_save_url" : filePath + posterName,
+		"poster_url":      qrcode.GetQrCodeFullUrl(posterName),
+		"poster_save_url": filePath + posterName,
 	})
 }

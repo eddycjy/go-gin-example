@@ -1,12 +1,13 @@
 package article_service
 
 import (
-	"github.com/EDDYCJY/go-gin-example/pkg/file"
-	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
 	"image"
 	"image/draw"
 	"image/jpeg"
 	"os"
+
+	"github.com/EDDYCJY/go-gin-example/pkg/file"
+	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
 )
 
 type ArticlePoster struct {
@@ -53,10 +54,10 @@ type ArticlePosterBg struct {
 
 type Rect struct {
 	Name string
-	X0 int
-	Y0 int
-	X1 int
-	Y1 int
+	X0   int
+	Y0   int
+	X1   int
+	Y1   int
 }
 
 type Pt struct {
@@ -66,10 +67,10 @@ type Pt struct {
 
 func NewArticlePosterBg(name string, ap *ArticlePoster, rect *Rect, pt *Pt) *ArticlePosterBg {
 	return &ArticlePosterBg{
-		Name: name,
+		Name:          name,
 		ArticlePoster: ap,
-		Rect : rect,
-		Pt : pt,
+		Rect:          rect,
+		Pt:            pt,
 	}
 }
 

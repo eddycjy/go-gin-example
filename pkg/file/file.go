@@ -1,11 +1,11 @@
 package file
 
 import (
+	"fmt"
 	"io/ioutil"
 	"mime/multipart"
 	"os"
 	"path"
-	"fmt"
 )
 
 func GetSize(f multipart.File) (int, error) {
