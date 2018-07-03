@@ -2,5 +2,4 @@
 .DS_Store
 
 runtime/*
-!runtime/qrcode
 !runtime/qrcode/bg.jpg
