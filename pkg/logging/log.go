@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"github.com/EDDYCJY/go-gin-example/pkg/file"
 )
 
 type Level int
@@ -33,7 +34,7 @@ func Setup() {
 	var err error
 	filePath := getLogFilePath()
 	fileName := getLogFileName()
-	F, err = openLogFile(fileName, filePath)
+	F, err = file.MustOpen(fileName, filePath)
 	if err != nil {
 		log.Fatalln(err)
 	}

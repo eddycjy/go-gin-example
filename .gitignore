@@ -1,4 +1,6 @@
 .idea/
 .DS_Store
 
-/runtime
+runtime/*
+!runtime/qrcode
+!runtime/qrcode/bg.jpg
