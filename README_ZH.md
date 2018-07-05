@@ -20,7 +20,8 @@
 12. [Gin实践 连载十二 优化配置结构及实现图片上传](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-05-27-Gin%E5%AE%9E%E8%B7%B5-%E8%BF%9E%E8%BD%BD%E5%8D%81%E4%BA%8C-%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0.md)
 13. [Gin实践 连载十三 优化你的应用结构和实现Redis缓存](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-06-02-Gin%E5%AE%9E%E8%B7%B5-%E8%BF%9E%E8%BD%BD%E5%8D%81%E4%B8%89-%E4%BC%98%E5%8C%96%E4%BD%A0%E7%9A%84%E5%BA%94%E7%94%A8%E7%BB%93%E6%9E%84%E5%92%8C%E5%AE%9E%E7%8E%B0Redis%E7%BC%93%E5%AD%98.md)
 14. [Gin实践 连载十四 实现导出、导入 Excel](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-06-14-Gin%E5%AE%9E%E8%B7%B5-%E8%BF%9E%E8%BD%BD%E5%8D%81%E5%9B%9B-%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BA%E3%80%81%E5%AF%BC%E5%85%A5-Excel.md)
-15. [Gin实践 番外 Golang交叉编译](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-03-26-Gin%E5%AE%9E%E8%B7%B5-%E7%95%AA%E5%A4%96-Golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91.md)
+15. [Gin实践 连载十五 生成二维码、合并海报](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-07-04-Gin%E5%AE%9E%E8%B7%B5-%E8%BF%9E%E8%BD%BD%E5%8D%81%E4%BA%94-%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81-%E5%90%88%E5%B9%B6%E6%B5%B7%E6%8A%A5.md)
+16. [Gin实践 番外 Golang交叉编译](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-03-26-Gin%E5%AE%9E%E8%B7%B5-%E7%95%AA%E5%A4%96-Golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91.md)
 
 ## 安装
 ```
