@@ -5,12 +5,13 @@ import (
 	"image/draw"
 	"image/jpeg"
 	"os"
+	"io/ioutil"
+
+	"github.com/golang/freetype"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/file"
 	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
-	"github.com/golang/freetype"
-	"io/ioutil"
 )
 
 type ArticlePoster struct {
