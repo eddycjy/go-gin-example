@@ -23,6 +23,7 @@
 15. [Gin实践 连载十五 生成二维码、合并海报](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-07-04-Gin%E5%AE%9E%E8%B7%B5-%E8%BF%9E%E8%BD%BD%E5%8D%81%E4%BA%94-%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81-%E5%90%88%E5%B9%B6%E6%B5%B7%E6%8A%A5.md)
 16. [Gin实践 连载十六 在图片上绘制文字](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-07-07-Gin%E5%AE%9E%E8%B7%B5-%E8%BF%9E%E8%BD%BD%E5%8D%81%E5%85%AD-%E5%9C%A8%E5%9B%BE%E7%89%87%E4%B8%8A%E7%BB%98%E5%88%B6%E6%96%87%E5%AD%97.md)
 17. [Gin实践 番外 Golang交叉编译](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-03-26-Gin%E5%AE%9E%E8%B7%B5-%E7%95%AA%E5%A4%96-Golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91.md)
+18. [Gin实践 番外 请入门 Makefile](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-08-26-Gin%E5%AE%9E%E8%B7%B5-%E7%95%AA%E5%A4%96-%E8%AF%B7%E5%85%A5%E9%97%A8%20Makefile.md)
 
 ## 安装
 ```
