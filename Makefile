@@ -6,7 +6,7 @@ build:
 	@go build -v .
 
 tool:
-	go tool vet . |& grep -v vendor; true
+	go vet ./...; true
 	gofmt -w .
 
 lint:
