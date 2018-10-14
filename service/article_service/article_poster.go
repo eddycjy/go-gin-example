@@ -4,8 +4,8 @@ import (
 	"image"
 	"image/draw"
 	"image/jpeg"
-	"os"
 	"io/ioutil"
+	"os"
 
 	"github.com/golang/freetype"
 

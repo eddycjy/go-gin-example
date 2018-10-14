@@ -23,7 +23,7 @@ import (
 // @Success 200 {string} json "{"code":200,"data":{"id":3,"created_on":1516937037,"modified_on":0,"tag_id":11,"tag":{"id":11,"created_on":1516851591,"modified_on":0,"name":"312321","created_by":"4555","modified_by":"","state":1},"content":"5555","created_by":"2412","modified_by":"","state":1},"msg":"ok"}"
 // @Router /api/v1/articles/{id} [get]
 func GetArticle(c *gin.Context) {
-	appG := app.Gin{c}
+	appG := app.Gin{C: c}
 	id := com.StrTo(c.Param("id")).MustInt()
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
@@ -62,7 +62,7 @@ func GetArticle(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":[{"id":3,"created_on":1516937037,"modified_on":0,"tag_id":11,"tag":{"id":11,"created_on":1516851591,"modified_on":0,"name":"312321","created_by":"4555","modified_by":"","state":1},"content":"5555","created_by":"2412","modified_by":"","state":1}],"msg":"ok"}"
 // @Router /api/v1/articles [get]
 func GetArticles(c *gin.Context) {
-	appG := app.Gin{c}
+	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 
 	state := -1
@@ -120,7 +120,7 @@ func GetArticles(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/articles [post]
 func AddArticle(c *gin.Context) {
-	appG := app.Gin{c}
+	appG := app.Gin{C: c}
 	tagId := com.StrTo(c.PostForm("tag_id")).MustInt()
 	title := c.PostForm("title")
 	desc := c.PostForm("desc")
@@ -185,7 +185,7 @@ func AddArticle(c *gin.Context) {
 // @Failure 200 {string} json "{"code":400,"data":{},"msg":"请求参数错误"}"
 // @Router /api/v1/articles/{id} [put]
 func EditArticle(c *gin.Context) {
-	appG := app.Gin{c}
+	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 	id := com.StrTo(c.Param("id")).MustInt()
 	tagId := com.StrTo(c.PostForm("tag_id")).MustInt()
@@ -265,7 +265,7 @@ func EditArticle(c *gin.Context) {
 // @Failure 200 {string} json "{"code":400,"data":{},"msg":"请求参数错误"}"
 // @Router /api/v1/articles/{id} [delete]
 func DeleteArticle(c *gin.Context) {
-	appG := app.Gin{c}
+	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 	id := com.StrTo(c.Param("id")).MustInt()
 	valid.Min(id, 1, "id").Message("ID必须大于0")
@@ -301,9 +301,9 @@ const (
 )
 
 func GenerateArticlePoster(c *gin.Context) {
-	appG := app.Gin{c}
+	appG := app.Gin{C: c}
 	article := &article_service.Article{}
-	qr := qrcode.NewQrCode(QRCODE_URL, 300, 300, qr.M, qr.Auto) // 目前写死 gin 系列路径，可自行增加业务逻辑
+	qr := qrcode.NewQrCode(QRCODE_URL, 300, 300, qr.M, qr.Auto)
 	posterName := article_service.GetPosterFlag() + "-" + qrcode.GetQrCodeFileName(qr.URL) + qr.GetQrCodeExt()
 	articlePoster := article_service.NewArticlePoster(posterName, article, qr)
 	articlePosterBgService := article_service.NewArticlePosterBg(
