@@ -13,7 +13,28 @@ $ go get github.com/EDDYCJY/go-gin-example
 
 ### Required
 
+- Mysql
 - Redis
+
+### Conf
+
+```
+[database]
+Type = mysql
+User = root
+Password =
+Host = 127.0.0.1:3306
+Name = blog
+TablePrefix = blog_
+
+[redis]
+Host = 127.0.0.1:6379
+Password =
+MaxIdle = 30
+MaxActive = 30
+IdleTimeout = 200
+...
+```
 
 ### Ready
 
