@@ -5,6 +5,7 @@ import (
 
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
+	"github.com/boombuler/barcode/qr"
 	"github.com/gin-gonic/gin"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/app"
@@ -14,7 +15,6 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
 	"github.com/EDDYCJY/go-gin-example/service/article_service"
 	"github.com/EDDYCJY/go-gin-example/service/tag_service"
-	"github.com/boombuler/barcode/qr"
 )
 
 // @Summary 获取单个文章
@@ -109,6 +109,16 @@ func GetArticles(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, data)
 }
 
+type AddArticleForm struct {
+	TagID         int    `form:"tag_id" valid:"Required;Min(1)"`
+	Title         string `form:"title" valid:"Required;MaxSize(100)"`
+	Desc          string `form:"desc" valid:"Required;MaxSize(255)"`
+	Content       string `form:"content" valid:"Required;MaxSize(65535)"`
+	CreatedBy     string `form:"created_by" valid:"Required;MaxSize(100)"`
+	CoverImageUrl string `form:"cover_image_url" valid:"Required;MaxSize(255)"`
+	State         int    `form:"state" valid:"Range(0,1)"`
+}
+
 // @Summary 新增文章
 // @Produce  json
 // @Param tag_id query int true "TagID"
@@ -120,31 +130,18 @@ func GetArticles(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/articles [post]
 func AddArticle(c *gin.Context) {
-	appG := app.Gin{C: c}
-	tagId := com.StrTo(c.PostForm("tag_id")).MustInt()
-	title := c.PostForm("title")
-	desc := c.PostForm("desc")
-	content := c.PostForm("content")
-	createdBy := c.PostForm("created_by")
-	coverImageUrl := c.PostForm("cover_image_url")
-	state := com.StrTo(c.DefaultPostForm("state", "0")).MustInt()
+	var (
+		appG = app.Gin{C: c}
+		form AddArticleForm
+	)
 
-	valid := validation.Validation{}
-	valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
-	valid.Required(title, "title").Message("标题不能为空")
-	valid.Required(desc, "desc").Message("简述不能为空")
-	valid.Required(content, "content").Message("内容不能为空")
-	valid.Required(createdBy, "created_by").Message("创建人不能为空")
-	valid.Required(coverImageUrl, "cover_image_url").Message("封面地址不能为空")
-	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
-
-	if valid.HasErrors() {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+	httpCode, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(httpCode, errCode, nil)
 		return
 	}
 
-	tagService := tag_service.Tag{ID: tagId}
+	tagService := tag_service.Tag{ID: form.TagID}
 	exists, err := tagService.ExistByID()
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG_FAIL, nil)
@@ -157,12 +154,12 @@ func AddArticle(c *gin.Context) {
 	}
 
 	articleService := article_service.Article{
-		TagID:         tagId,
-		Title:         title,
-		Desc:          desc,
-		Content:       content,
-		CoverImageUrl: coverImageUrl,
-		State:         state,
+		TagID:         form.TagID,
+		Title:         form.Title,
+		Desc:          form.Desc,
+		Content:       form.Content,
+		CoverImageUrl: form.CoverImageUrl,
+		State:         form.State,
 	}
 	if err := articleService.Add(); err != nil {
 		appG.Response(http.StatusOK, e.ERROR_ADD_ARTICLE_FAIL, nil)
@@ -170,6 +167,17 @@ func AddArticle(c *gin.Context) {
 	}
 
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
+}
+
+type EditArticleForm struct {
+	ID            int    `form:"id" valid:"Required;Min(1)"`
+	TagID         int    `form:"tag_id" valid:"Required;Min(1)"`
+	Title         string `form:"title" valid:"Required;MaxSize(100)"`
+	Desc          string `form:"desc" valid:"Required;MaxSize(255)"`
+	Content       string `form:"content" valid:"Required;MaxSize(65535)"`
+	ModifiedBy    string `form:"modified_by" valid:"Required;MaxSize(100)"`
+	CoverImageUrl string `form:"cover_image_url" valid:"Required;MaxSize(255)"`
+	State         int    `form:"state" valid:"Range(0,1)"`
 }
 
 // @Summary 修改文章
@@ -185,47 +193,26 @@ func AddArticle(c *gin.Context) {
 // @Failure 200 {string} json "{"code":400,"data":{},"msg":"请求参数错误"}"
 // @Router /api/v1/articles/{id} [put]
 func EditArticle(c *gin.Context) {
-	appG := app.Gin{C: c}
-	valid := validation.Validation{}
-	id := com.StrTo(c.Param("id")).MustInt()
-	tagId := com.StrTo(c.PostForm("tag_id")).MustInt()
-	title := c.PostForm("title")
-	desc := c.PostForm("desc")
-	content := c.PostForm("content")
-	coverImageUrl := c.PostForm("cover_image_url")
-	modifiedBy := c.PostForm("modified_by")
+	var (
+		appG = app.Gin{C: c}
+		form = EditArticleForm{ID: com.StrTo(c.Param("id")).MustInt()}
+	)
 
-	state := -1
-	if arg := c.PostForm("state"); arg != "" {
-		state = com.StrTo(arg).MustInt()
-		valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
-	}
-
-	valid.Min(id, 1, "id").Message("ID必须大于0")
-	valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
-	valid.MaxSize(title, 100, "title").Message("标题最长为100字符")
-	valid.Required(title, "title").Message("标题不能为空")
-	valid.MaxSize(desc, 255, "desc").Message("简述最长为255字符")
-	valid.Required(desc, "desc").Message("简述不能为空")
-	valid.MaxSize(content, 65535, "content").Message("内容最长为65535字符")
-	valid.Required(modifiedBy, "modified_by").Message("修改人不能为空")
-	valid.Required(coverImageUrl, "cover_image_url").Message("封面地址不能为空")
-	valid.MaxSize(coverImageUrl, 255, "cover_image_url").Message("封面地址最长为255字符")
-	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
-
-	if valid.HasErrors() {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+	httpCode, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(httpCode, errCode, nil)
 		return
 	}
 
 	articleService := article_service.Article{
-		ID:            id,
-		Title:         title,
-		Desc:          desc,
-		Content:       content,
-		CoverImageUrl: coverImageUrl,
-		ModifiedBy:    modifiedBy,
+		ID:			   form.ID,
+		TagID:         form.TagID,
+		Title:         form.Title,
+		Desc:          form.Desc,
+		Content:       form.Content,
+		CoverImageUrl: form.CoverImageUrl,
+		ModifiedBy:    form.ModifiedBy,
+		State:         form.State,
 	}
 	exists, err := articleService.ExistByID()
 	if err != nil {
@@ -237,7 +224,7 @@ func EditArticle(c *gin.Context) {
 		return
 	}
 
-	tagService := tag_service.Tag{ID: tagId}
+	tagService := tag_service.Tag{ID: form.TagID}
 	exists, err = tagService.ExistByID()
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG_FAIL, nil)

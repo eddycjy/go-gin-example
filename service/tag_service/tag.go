@@ -128,7 +128,7 @@ func (t *Tag) Export() (string, error) {
 	}
 
 	time := strconv.Itoa(int(time.Now().Unix()))
-	filename := "tags-" + time + ".xlsx"
+	filename := "tags-" + time + export.EXT
 
 	fullPath := export.GetExcelFullPath() + filename
 	err = file.Save(fullPath)

@@ -54,6 +54,12 @@ func GetTags(c *gin.Context) {
 	})
 }
 
+type AddTagForm struct {
+	Name      string `form:"name" valid:"Required;MaxSize(100)"`
+	CreatedBy string `form:"created_by" valid:"Required;MaxSize(100)"`
+	State     int    `form:"state" valid:"Range(0,1)"`
+}
+
 // @Summary 新增文章标签
 // @Produce  json
 // @Param name query string true "Name"
@@ -62,30 +68,22 @@ func GetTags(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags [post]
 func AddTag(c *gin.Context) {
-	appG := app.Gin{C: c}
-	name := c.PostForm("name")
-	state := com.StrTo(c.DefaultPostForm("state", "0")).MustInt()
-	createdBy := c.PostForm("created_by")
+	var (
+		appG = app.Gin{C: c}
+		form AddTagForm
+	)
 
-	valid := validation.Validation{}
-	valid.Required(name, "name").Message("名称不能为空")
-	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
-	valid.Required(createdBy, "created_by").Message("创建人不能为空")
-	valid.MaxSize(createdBy, 100, "created_by").Message("创建人最长为100字符")
-	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
-
-	if valid.HasErrors() {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+	httpCode, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(httpCode, errCode, nil)
 		return
 	}
 
 	tagService := tag_service.Tag{
-		Name:      name,
-		CreatedBy: createdBy,
-		State:     state,
+		Name:      form.Name,
+		CreatedBy: form.CreatedBy,
+		State:     form.State,
 	}
-
 	exists, err := tagService.ExistByName()
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG_FAIL, nil)
@@ -105,6 +103,13 @@ func AddTag(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
 
+type EditTagForm struct {
+	ID         int    `form:"id" valid:"Required;Min(1)"`
+	Name       string `form:"name" valid:"Required;MaxSize(100)"`
+	ModifiedBy string `form:"modified_by" valid:"Required;MaxSize(100)"`
+	State      int    `form:"state" valid:"Range(0,1)"`
+}
+
 // @Summary 修改文章标签
 // @Produce  json
 // @Param id param int true "ID"
@@ -114,35 +119,22 @@ func AddTag(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags/{id} [put]
 func EditTag(c *gin.Context) {
-	appG := app.Gin{C: c}
-	valid := validation.Validation{}
-	id := com.StrTo(c.Param("id")).MustInt()
-	name := c.PostForm("name")
-	modifiedBy := c.PostForm("modified_by")
+	var (
+		appG = app.Gin{C: c}
+		form = EditTagForm{ID: com.StrTo(c.Param("id")).MustInt()}
+	)
 
-	state := -1
-	if arg := c.PostForm("state"); arg != "" {
-		state = com.StrTo(arg).MustInt()
-		valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
-	}
-
-	valid.Required(id, "id").Message("ID不能为空")
-	valid.Required(modifiedBy, "modified_by").Message("修改人不能为空")
-	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
-	valid.Required(name, "name").Message("名称不能为空")
-	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
-
-	if valid.HasErrors() {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+	httpCode, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(httpCode, errCode, nil)
 		return
 	}
 
 	tagService := tag_service.Tag{
-		ID:         id,
-		Name:       name,
-		ModifiedBy: modifiedBy,
-		State:      state,
+		ID:         form.ID,
+		Name:       form.Name,
+		ModifiedBy: form.ModifiedBy,
+		State:      form.State,
 	}
 
 	exists, err := tagService.ExistByID()
