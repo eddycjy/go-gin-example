@@ -41,12 +41,17 @@ func AddTag(name string, state int, createdBy string) error {
 }
 
 func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
-	var tags []Tag
+	var (
+		tags []Tag
+	 	err error
+	)
+
 	if pageSize > 0 && pageNum > 0 {
-		db = db.Offset(pageNum).Limit(pageSize)
+		err = db.Where(maps).Find(&tags).Offset(pageNum).Limit(pageSize).Error
+	} else {
+		err = db.Where(maps).Find(&tags).Error
 	}
 
-	err := db.Where(maps).Find(&tags).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
