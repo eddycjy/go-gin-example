@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
-	"runtime"
 	"syscall"
 
 	"github.com/fvbock/endless"
@@ -35,18 +33,17 @@ func main() {
 	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)
 	maxHeaderBytes := 1 << 20
 
-	if runtime.GOOS == "windows" {
-		server := &http.Server{
-			Addr:           endPoint,
-			Handler:        routersInit,
-			ReadTimeout:    readTimeout,
-			WriteTimeout:   writeTimeout,
-			MaxHeaderBytes: maxHeaderBytes,
-		}
-
-		server.ListenAndServe()
-		return
-	}
+	// If it is windows, you should open and comment out the endless related code.
+	//server := &http.Server{
+	//	Addr:           endPoint,
+	//	Handler:        routersInit,
+	//	ReadTimeout:    readTimeout,
+	//	WriteTimeout:   writeTimeout,
+	//	MaxHeaderBytes: maxHeaderBytes,
+	//}
+	//
+	//server.ListenAndServe()
+	//return
 
 	endless.DefaultReadTimeOut = readTimeout
 	endless.DefaultWriteTimeOut = writeTimeout
