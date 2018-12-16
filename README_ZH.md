@@ -31,6 +31,10 @@
 $ go get github.com/EDDYCJY/go-gin-example
 ```
 
+### 准备
+
+创建一个 `blog` 数据库，并且导入建表的 [SQL](https://github.com/EDDYCJY/go-gin-example/blob/master/docs/sql/blog.sql)
+
 ## 如何运行
 
 ### 必须
@@ -39,6 +43,8 @@ $ go get github.com/EDDYCJY/go-gin-example
 - Redis
 
 ### 配置
+
+你应该修改 `conf/app.ini` 配置文件
 
 ```
 [database]
@@ -58,9 +64,6 @@ IdleTimeout = 200
 ...
 ```
 
-### 准备
-
-创建一个 `blog` 数据库，并且导入建表的 [SQL](https://github.com/EDDYCJY/go-gin-example/blob/master/docs/sql/blog.sql)
 
 ### 运行
 ```
