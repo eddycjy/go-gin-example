@@ -36,7 +36,7 @@ func Setup() {
 	fileName := getLogFileName()
 	F, err = file.MustOpen(fileName, filePath)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("logging.Setup err: %v", err)
 	}
 
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)

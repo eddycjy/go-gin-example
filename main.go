@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/EDDYCJY/go-gin-example/models"
@@ -37,6 +38,8 @@ func main() {
 		WriteTimeout:   writeTimeout,
 		MaxHeaderBytes: maxHeaderBytes,
 	}
+
+	log.Printf("[info] start http server listening %s", endPoint)
 
 	server.ListenAndServe()
 
