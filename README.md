@@ -16,7 +16,13 @@ $ go get github.com/EDDYCJY/go-gin-example
 - Mysql
 - Redis
 
+### Ready
+
+Create a **blog database** and import [SQL](https://github.com/EDDYCJY/go-gin-example/blob/master/docs/sql/blog.sql)
+
 ### Conf
+
+You should modify `conf/app.ini`
 
 ```
 [database]
@@ -35,10 +41,6 @@ MaxActive = 30
 IdleTimeout = 200
 ...
 ```
-
-### Ready
-
-Create a **blog database** and import [SQL](https://github.com/EDDYCJY/go-gin-example/blob/master/docs/sql/blog.sql)
 
 ### Run
 ```
