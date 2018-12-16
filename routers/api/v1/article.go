@@ -30,14 +30,14 @@ func GetArticle(c *gin.Context) {
 
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
 		return
 	}
 
 	articleService := article_service.Article{ID: id}
 	exists, err := articleService.ExistByID()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
 		return
 	}
 	if !exists {
@@ -47,7 +47,7 @@ func GetArticle(c *gin.Context) {
 
 	article, err := articleService.Get()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_GET_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_GET_ARTICLE_FAIL, nil)
 		return
 	}
 
@@ -79,7 +79,7 @@ func GetArticles(c *gin.Context) {
 
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
 		return
 	}
 
@@ -92,13 +92,13 @@ func GetArticles(c *gin.Context) {
 
 	total, err := articleService.Count()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_COUNT_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_COUNT_ARTICLE_FAIL, nil)
 		return
 	}
 
 	articles, err := articleService.GetAll()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_GET_ARTICLES_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_GET_ARTICLES_FAIL, nil)
 		return
 	}
 
@@ -144,7 +144,7 @@ func AddArticle(c *gin.Context) {
 	tagService := tag_service.Tag{ID: form.TagID}
 	exists, err := tagService.ExistByID()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG_FAIL, nil)
 		return
 	}
 
@@ -162,7 +162,7 @@ func AddArticle(c *gin.Context) {
 		State:         form.State,
 	}
 	if err := articleService.Add(); err != nil {
-		appG.Response(http.StatusOK, e.ERROR_ADD_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_ADD_ARTICLE_FAIL, nil)
 		return
 	}
 
@@ -216,7 +216,7 @@ func EditArticle(c *gin.Context) {
 	}
 	exists, err := articleService.ExistByID()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
 		return
 	}
 	if !exists {
@@ -227,7 +227,7 @@ func EditArticle(c *gin.Context) {
 	tagService := tag_service.Tag{ID: form.TagID}
 	exists, err = tagService.ExistByID()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG_FAIL, nil)
 		return
 	}
 
@@ -238,7 +238,7 @@ func EditArticle(c *gin.Context) {
 
 	err = articleService.Edit()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_EDIT_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_EDIT_ARTICLE_FAIL, nil)
 		return
 	}
 
@@ -266,7 +266,7 @@ func DeleteArticle(c *gin.Context) {
 	articleService := article_service.Article{ID: id}
 	exists, err := articleService.ExistByID()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
 		return
 	}
 	if !exists {
@@ -276,7 +276,7 @@ func DeleteArticle(c *gin.Context) {
 
 	err = articleService.Delete()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_DELETE_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_DELETE_ARTICLE_FAIL, nil)
 		return
 	}
 
@@ -310,7 +310,7 @@ func GenerateArticlePoster(c *gin.Context) {
 
 	_, filePath, err := articlePosterBgService.Generate()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR_GEN_ARTICLE_POSTER_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_GEN_ARTICLE_POSTER_FAIL, nil)
 		return
 	}
 
