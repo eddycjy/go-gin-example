@@ -96,7 +96,7 @@ Actual pid is 4393
 ```
 Swagger 文档
 
-![image](https://sfault-image.b0.upaiyun.com/286/780/2867807553-5aae27c4ac806_articlex)
+![image](https://i.imgur.com/bVRLTP4.jpg)
 
 ## 特性
 
