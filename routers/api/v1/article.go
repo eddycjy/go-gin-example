@@ -17,16 +17,17 @@ import (
 	"github.com/EDDYCJY/go-gin-example/service/tag_service"
 )
 
-// @Summary 获取单个文章
+// @Summary Get a single article
 // @Produce  json
-// @Param id param int true "ID"
-// @Success 200 {string} json "{"code":200,"data":{"id":3,"created_on":1516937037,"modified_on":0,"tag_id":11,"tag":{"id":11,"created_on":1516851591,"modified_on":0,"name":"312321","created_by":"4555","modified_by":"","state":1},"content":"5555","created_by":"2412","modified_by":"","state":1},"msg":"ok"}"
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/articles/{id} [get]
 func GetArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
 	id := com.StrTo(c.Param("id")).MustInt()
 	valid := validation.Validation{}
-	valid.Min(id, 1, "id").Message("ID必须大于0")
+	valid.Min(id, 1, "id")
 
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
@@ -54,12 +55,13 @@ func GetArticle(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, article)
 }
 
-// @Summary 获取多个文章
+// @Summary Get multiple articles
 // @Produce  json
-// @Param tag_id query int false "TagID"
-// @Param state query int false "State"
-// @Param created_by query int false "CreatedBy"
-// @Success 200 {string} json "{"code":200,"data":[{"id":3,"created_on":1516937037,"modified_on":0,"tag_id":11,"tag":{"id":11,"created_on":1516851591,"modified_on":0,"name":"312321","created_by":"4555","modified_by":"","state":1},"content":"5555","created_by":"2412","modified_by":"","state":1}],"msg":"ok"}"
+// @Param tag_id body int false "TagID"
+// @Param state body int false "State"
+// @Param created_by body int false "CreatedBy"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/articles [get]
 func GetArticles(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -68,13 +70,13 @@ func GetArticles(c *gin.Context) {
 	state := -1
 	if arg := c.PostForm("state"); arg != "" {
 		state = com.StrTo(arg).MustInt()
-		valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
+		valid.Range(state, 0, 1, "state")
 	}
 
 	tagId := -1
 	if arg := c.PostForm("tag_id"); arg != "" {
 		tagId = com.StrTo(arg).MustInt()
-		valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
+		valid.Min(tagId, 1, "tag_id")
 	}
 
 	if valid.HasErrors() {
@@ -119,15 +121,16 @@ type AddArticleForm struct {
 	State         int    `form:"state" valid:"Range(0,1)"`
 }
 
-// @Summary 新增文章
+// @Summary Add article
 // @Produce  json
-// @Param tag_id query int true "TagID"
-// @Param title query string true "Title"
-// @Param desc query string true "Desc"
-// @Param content query string true "Content"
-// @Param created_by query string true "CreatedBy"
-// @Param state query int true "State"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Param tag_id body int true "TagID"
+// @Param title body string true "Title"
+// @Param desc body string true "Desc"
+// @Param content body string true "Content"
+// @Param created_by body string true "CreatedBy"
+// @Param state body int true "State"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/articles [post]
 func AddArticle(c *gin.Context) {
 	var (
@@ -180,17 +183,17 @@ type EditArticleForm struct {
 	State         int    `form:"state" valid:"Range(0,1)"`
 }
 
-// @Summary 修改文章
+// @Summary Update article
 // @Produce  json
-// @Param id param int true "ID"
-// @Param tag_id query string false "TagID"
-// @Param title query string false "Title"
-// @Param desc query string false "Desc"
-// @Param content query string false "Content"
-// @Param modified_by query string true "ModifiedBy"
-// @Param state query int false "State"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Failure 200 {string} json "{"code":400,"data":{},"msg":"请求参数错误"}"
+// @Param id path int true "ID"
+// @Param tag_id body string false "TagID"
+// @Param title body string false "Title"
+// @Param desc body string false "Desc"
+// @Param content body string false "Content"
+// @Param modified_by body string true "ModifiedBy"
+// @Param state body int false "State"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/articles/{id} [put]
 func EditArticle(c *gin.Context) {
 	var (
@@ -205,7 +208,7 @@ func EditArticle(c *gin.Context) {
 	}
 
 	articleService := article_service.Article{
-		ID:			   form.ID,
+		ID:            form.ID,
 		TagID:         form.TagID,
 		Title:         form.Title,
 		Desc:          form.Desc,
@@ -245,11 +248,11 @@ func EditArticle(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
 
-// @Summary 删除文章
+// @Summary Delete article
 // @Produce  json
-// @Param id param int true "ID"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Failure 200 {string} json "{"code":400,"data":{},"msg":"请求参数错误"}"
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/articles/{id} [delete]
 func DeleteArticle(c *gin.Context) {
 	appG := app.Gin{C: c}

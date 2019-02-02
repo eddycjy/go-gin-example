@@ -16,11 +16,12 @@ import (
 	"github.com/EDDYCJY/go-gin-example/service/tag_service"
 )
 
-// @Summary 获取多个文章标签
+// @Summary Get multiple article tags
 // @Produce  json
 // @Param name query string false "Name"
 // @Param state query int false "State"
-// @Success 200 {string} json "{"code":200,"data":{"lists":[{"id":3,"created_on":1516849721,"modified_on":0,"name":"3333","created_by":"4555","modified_by":"","state":0}],"total":29},"msg":"ok"}"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/tags [get]
 func GetTags(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -60,12 +61,13 @@ type AddTagForm struct {
 	State     int    `form:"state" valid:"Range(0,1)"`
 }
 
-// @Summary 新增文章标签
+// @Summary Add article tag
 // @Produce  json
-// @Param name query string true "Name"
-// @Param state query int false "State"
-// @Param created_by query int false "CreatedBy"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Param name body string true "Name"
+// @Param state body int false "State"
+// @Param created_by body int false "CreatedBy"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/tags [post]
 func AddTag(c *gin.Context) {
 	var (
@@ -110,13 +112,14 @@ type EditTagForm struct {
 	State      int    `form:"state" valid:"Range(0,1)"`
 }
 
-// @Summary 修改文章标签
+// @Summary Update article tag
 // @Produce  json
-// @Param id param int true "ID"
-// @Param name query string true "ID"
-// @Param state query int false "State"
-// @Param modified_by query string true "ModifiedBy"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Param id path int true "ID"
+// @Param name body string true "ID"
+// @Param state body int false "State"
+// @Param modified_by body string true "ModifiedBy"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/tags/{id} [put]
 func EditTag(c *gin.Context) {
 	var (
@@ -157,10 +160,11 @@ func EditTag(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
 
-// @Summary 删除文章标签
+// @Summary Delete article tag
 // @Produce  json
-// @Param id param int true "ID"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/tags/{id} [delete]
 func DeleteTag(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -193,11 +197,12 @@ func DeleteTag(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
 
-// @Summary 导出文章标签
+// @Summary Export article tag
 // @Produce  json
-// @Param name post string false "Name"
-// @Param state post int false "State"
-// @Success 200 {string} json "{"code":200,"data":{"export_save_url":"export/abc.xlsx", "export_url": "http://..."},"msg":"ok"}"
+// @Param name body string false "Name"
+// @Param state body int false "State"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/tags/export [post]
 func ExportTag(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -224,10 +229,11 @@ func ExportTag(c *gin.Context) {
 	})
 }
 
-// @Summary 导入文章标签
+// @Summary Import article tag
 // @Produce  json
-// @Param file post file true "标签Excel文件"
-// @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
+// @Param file body file true "Excel File"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /api/v1/tags/import [post]
 func ImportTag(c *gin.Context) {
 	appG := app.Gin{C: c}
