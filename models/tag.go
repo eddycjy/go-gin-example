@@ -43,7 +43,7 @@ func AddTag(name string, state int, createdBy string) error {
 func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 	var (
 		tags []Tag
-	 	err error
+		err  error
 	)
 
 	if pageSize > 0 && pageNum > 0 {

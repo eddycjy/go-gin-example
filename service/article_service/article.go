@@ -49,7 +49,7 @@ func (a *Article) Edit() error {
 		"desc":            a.Desc,
 		"content":         a.Content,
 		"cover_image_url": a.CoverImageUrl,
-		"state":		   a.State,
+		"state":           a.State,
 		"modified_by":     a.ModifiedBy,
 	})
 }
