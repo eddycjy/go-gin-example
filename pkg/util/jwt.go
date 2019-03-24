@@ -15,6 +15,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+// GenerateToken generate tokens used for auth
 func GenerateToken(username, password string) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(3 * time.Hour)
@@ -34,6 +35,7 @@ func GenerateToken(username, password string) (string, error) {
 	return token, err
 }
 
+// ParseToken parsing token
 func ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil

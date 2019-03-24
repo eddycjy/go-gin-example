@@ -18,6 +18,7 @@ import (
 	"github.com/EDDYCJY/go-gin-example/routers/api/v1"
 )
 
+// InitRouter initialize routing information
 func InitRouter() *gin.Engine {
 	r := gin.New()
 

@@ -7,6 +7,7 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 )
 
+// GetPage get page parameters
 func GetPage(c *gin.Context) int {
 	result := 0
 	page := com.StrTo(c.Query("page")).MustInt()

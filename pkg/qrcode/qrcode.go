@@ -24,6 +24,7 @@ const (
 	EXT_JPG = ".jpg"
 )
 
+// NewQrCode initialize instance
 func NewQrCode(url string, width, height int, level qr.ErrorCorrectionLevel, mode qr.Encoding) *QrCode {
 	return &QrCode{
 		URL:    url,
@@ -35,35 +36,32 @@ func NewQrCode(url string, width, height int, level qr.ErrorCorrectionLevel, mod
 	}
 }
 
+// GetQrCodePath get save path
 func GetQrCodePath() string {
 	return setting.AppSetting.QrCodeSavePath
 }
 
+// GetQrCodeFullPath get full save path
 func GetQrCodeFullPath() string {
 	return setting.AppSetting.RuntimeRootPath + setting.AppSetting.QrCodeSavePath
 }
 
+// GetQrCodeFullUrl get the full access path
 func GetQrCodeFullUrl(name string) string {
 	return setting.AppSetting.PrefixUrl + "/" + GetQrCodePath() + name
 }
 
+// GetQrCodeFileName get qr file name
 func GetQrCodeFileName(value string) string {
 	return util.EncodeMD5(value)
 }
 
+// GetQrCodeExt get qr file ext
 func (q *QrCode) GetQrCodeExt() string {
 	return q.Ext
 }
 
-func (q *QrCode) CheckEncode(path string) bool {
-	src := path + GetQrCodeFileName(q.URL) + q.GetQrCodeExt()
-	if file.CheckNotExist(src) == true {
-		return false
-	}
-
-	return true
-}
-
+// Encode generate QR code
 func (q *QrCode) Encode(path string) (string, string, error) {
 	name := GetQrCodeFileName(q.URL) + q.GetQrCodeExt()
 	src := path + name

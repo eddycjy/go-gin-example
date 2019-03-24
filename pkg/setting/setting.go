@@ -62,6 +62,7 @@ var RedisSetting = &Redis{}
 
 var cfg *ini.File
 
+// Setup initialize the configuration instance
 func Setup() {
 	var err error
 	cfg, err = ini.Load("conf/app.ini")
@@ -80,6 +81,7 @@ func Setup() {
 	RedisSetting.IdleTimeout = RedisSetting.IdleTimeout * time.Second
 }
 
+// mapTo map section
 func mapTo(section string, v interface{}) {
 	err := cfg.Section(section).MapTo(v)
 	if err != nil {

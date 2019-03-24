@@ -13,6 +13,7 @@ type Tag struct {
 	State      int    `json:"state"`
 }
 
+// ExistTagByName checks if there is a tag with the same name
 func ExistTagByName(name string) (bool, error) {
 	var tag Tag
 	err := db.Select("id").Where("name = ? AND deleted_on = ? ", name, 0).First(&tag).Error
@@ -27,6 +28,7 @@ func ExistTagByName(name string) (bool, error) {
 	return false, nil
 }
 
+// AddTag Add a Tag
 func AddTag(name string, state int, createdBy string) error {
 	tag := Tag{
 		Name:      name,
@@ -40,6 +42,7 @@ func AddTag(name string, state int, createdBy string) error {
 	return nil
 }
 
+// GetTags gets a list of tags based on paging and constraints
 func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 	var (
 		tags []Tag
@@ -59,6 +62,7 @@ func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 	return tags, nil
 }
 
+// GetTagTotal counts the total number of tags based on the constraint
 func GetTagTotal(maps interface{}) (int, error) {
 	var count int
 	if err := db.Model(&Tag{}).Where(maps).Count(&count).Error; err != nil {
@@ -68,6 +72,7 @@ func GetTagTotal(maps interface{}) (int, error) {
 	return count, nil
 }
 
+// ExistTagByID determines whether a Tag exists based on the ID
 func ExistTagByID(id int) (bool, error) {
 	var tag Tag
 	err := db.Select("id").Where("id = ? AND deleted_on = ? ", id, 0).First(&tag).Error
@@ -81,6 +86,7 @@ func ExistTagByID(id int) (bool, error) {
 	return false, nil
 }
 
+// DeleteTag delete a tag
 func DeleteTag(id int) error {
 	if err := db.Where("id = ?", id).Delete(&Tag{}).Error; err != nil {
 		return err
@@ -89,6 +95,7 @@ func DeleteTag(id int) error {
 	return nil
 }
 
+// EditTag modify a single tag
 func EditTag(id int, data interface{}) error {
 	if err := db.Model(&Tag{}).Where("id = ? AND deleted_on = ? ", id, 0).Updates(data).Error; err != nil {
 		return err
@@ -97,6 +104,7 @@ func EditTag(id int, data interface{}) error {
 	return nil
 }
 
+// CleanAllTag clear all tag
 func CleanAllTag() (bool, error) {
 	if err := db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{}).Error; err != nil {
 		return false, err

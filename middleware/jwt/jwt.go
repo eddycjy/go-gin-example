@@ -10,6 +10,7 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
 )
 
+// JWT is jwt middleware
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var code int

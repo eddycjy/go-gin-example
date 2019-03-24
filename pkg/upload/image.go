@@ -14,10 +14,12 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
 )
 
+// GetImageFullUrl get the full access path
 func GetImageFullUrl(name string) string {
 	return setting.AppSetting.PrefixUrl + "/" + GetImagePath() + name
 }
 
+// GetImageName get image name
 func GetImageName(name string) string {
 	ext := path.Ext(name)
 	fileName := strings.TrimSuffix(name, ext)
@@ -26,14 +28,17 @@ func GetImageName(name string) string {
 	return fileName + ext
 }
 
+// GetImagePath get save path
 func GetImagePath() string {
 	return setting.AppSetting.ImageSavePath
 }
 
+// GetImageFullPath get full save path
 func GetImageFullPath() string {
 	return setting.AppSetting.RuntimeRootPath + GetImagePath()
 }
 
+// CheckImageExt check image file ext
 func CheckImageExt(fileName string) bool {
 	ext := file.GetExt(fileName)
 	for _, allowExt := range setting.AppSetting.ImageAllowExts {
@@ -45,6 +50,7 @@ func CheckImageExt(fileName string) bool {
 	return false
 }
 
+// CheckImageSize check image size
 func CheckImageSize(f multipart.File) bool {
 	size, err := file.GetSize(f)
 	if err != nil {
@@ -56,6 +62,7 @@ func CheckImageSize(f multipart.File) bool {
 	return size <= setting.AppSetting.ImageMaxSize
 }
 
+// CheckImage check if the file exists
 func CheckImage(src string) error {
 	dir, err := os.Getwd()
 	if err != nil {

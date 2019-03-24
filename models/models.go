@@ -20,6 +20,7 @@ type Model struct {
 	DeletedOn  int `json:"deleted_on"`
 }
 
+// Setup initializes the database instance
 func Setup() {
 	var err error
 	db, err = gorm.Open(setting.DatabaseSetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
@@ -44,6 +45,7 @@ func Setup() {
 	db.DB().SetMaxOpenConns(100)
 }
 
+// CloseDB closes database connection (unnecessary)
 func CloseDB() {
 	defer db.Close()
 }
@@ -73,6 +75,7 @@ func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 	}
 }
 
+// deleteCallback will set `DeletedOn` where deleting
 func deleteCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		var extraOption string
@@ -102,6 +105,7 @@ func deleteCallback(scope *gorm.Scope) {
 	}
 }
 
+// addExtraSpaceIfExist adds a separator
 func addExtraSpaceIfExist(str string) string {
 	if str != "" {
 		return " " + str

@@ -8,6 +8,7 @@ type Auth struct {
 	Password string `json:"password"`
 }
 
+// CheckAuth checks if authentication information exists
 func CheckAuth(username, password string) (bool, error) {
 	var auth Auth
 	err := db.Select("id").Where(Auth{Username: username, Password: password}).First(&auth).Error

@@ -8,6 +8,7 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/e"
 )
 
+// BindAndValid binds and validates data
 func BindAndValid(c *gin.Context, form interface{}) (int, int) {
 	err := c.Bind(form)
 	if err != nil {
