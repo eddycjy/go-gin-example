@@ -12,7 +12,6 @@ import (
 	"github.com/EDDYCJY/go-gin-example/middleware/jwt"
 	"github.com/EDDYCJY/go-gin-example/pkg/export"
 	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/upload"
 	"github.com/EDDYCJY/go-gin-example/routers/api"
 	"github.com/EDDYCJY/go-gin-example/routers/api/v1"
@@ -21,11 +20,8 @@ import (
 // InitRouter initialize routing information
 func InitRouter() *gin.Engine {
 	r := gin.New()
-
 	r.Use(gin.Logger())
-
 	r.Use(gin.Recovery())
-	gin.SetMode(setting.ServerSetting.RunMode)
 
 	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))

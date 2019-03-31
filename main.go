@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/EDDYCJY/go-gin-example/models"
 	"github.com/EDDYCJY/go-gin-example/pkg/gredis"
 	"github.com/EDDYCJY/go-gin-example/pkg/logging"
@@ -26,6 +28,8 @@ func init() {
 // @license.name MIT
 // @license.url https://github.com/EDDYCJY/go-gin-example/blob/master/LICENSE
 func main() {
+	gin.SetMode(setting.ServerSetting.RunMode)
+
 	routersInit := routers.InitRouter()
 	readTimeout := setting.ServerSetting.ReadTimeout
 	writeTimeout := setting.ServerSetting.WriteTimeout
