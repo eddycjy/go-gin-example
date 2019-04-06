@@ -1,6 +1,8 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 type Article struct {
 	Model
@@ -56,7 +58,12 @@ func GetArticles(pageNum int, pageSize int, maps interface{}) ([]*Article, error
 // GetArticle Get a single article based on ID
 func GetArticle(id int) (*Article, error) {
 	var article Article
-	err := db.Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Related(&article.Tag).Error
+	err := db.Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	err = db.Model(&article).Related(&article.Tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
