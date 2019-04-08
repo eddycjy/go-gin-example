@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"ginReact/middleware/jwt"
 	"ginReact/pkg/export"
 	"ginReact/pkg/qrcode"
 	"ginReact/pkg/upload"
@@ -31,7 +30,8 @@ func InitRouter() *gin.Engine {
 	r.POST("/upload", api.UploadImage)
 
 	apiv1 := r.Group("/api/v1")
-	apiv1.Use(jwt.JWT())
+	//暂时去除中间件认证
+	//apiv1.Use(jwt.JWT())
 	{
 		//获取标签列表
 		apiv1.GET("/tags", v1.GetTags)
