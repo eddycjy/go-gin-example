@@ -6,7 +6,7 @@ import (
 
 	"github.com/gomodule/redigo/redis"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
+	"ginReact/pkg/setting"
 )
 
 var RedisConn *redis.Pool

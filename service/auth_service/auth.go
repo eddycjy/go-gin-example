@@ -1,6 +1,6 @@
 package auth_service
 
-import "github.com/EDDYCJY/go-gin-example/models"
+import "ginReact/models"
 
 type Auth struct {
 	Username string

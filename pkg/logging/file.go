@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
+	"ginReact/pkg/setting"
 )
 
 // getLogFilePath get the log file save path

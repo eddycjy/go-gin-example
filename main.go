@@ -7,11 +7,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/EDDYCJY/go-gin-example/models"
-	"github.com/EDDYCJY/go-gin-example/pkg/gredis"
-	"github.com/EDDYCJY/go-gin-example/pkg/logging"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
-	"github.com/EDDYCJY/go-gin-example/routers"
+	"ginReact/models"
+	"ginReact/pkg/gredis"
+	"ginReact/pkg/logging"
+	"ginReact/pkg/setting"
+	"ginReact/routers"
 )
 
 func init() {
