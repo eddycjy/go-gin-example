@@ -12,6 +12,7 @@ import (
 	"github.com/EDDYCJY/go-gin-example/pkg/logging"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/routers"
+	"github.com/EDDYCJY/go-gin-example/pkg/util"
 )
 
 func init() {
@@ -19,6 +20,7 @@ func init() {
 	models.Setup()
 	logging.Setup()
 	gredis.Setup()
+	util.Setup()
 }
 
 // @title Golang Gin API
