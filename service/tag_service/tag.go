@@ -11,6 +11,7 @@ import (
 
 	"github.com/EDDYCJY/go-gin-example/models"
 	"github.com/EDDYCJY/go-gin-example/pkg/export"
+	"github.com/EDDYCJY/go-gin-example/pkg/file"
 	"github.com/EDDYCJY/go-gin-example/pkg/gredis"
 	"github.com/EDDYCJY/go-gin-example/pkg/logging"
 	"github.com/EDDYCJY/go-gin-example/service/cache_service"
@@ -95,8 +96,8 @@ func (t *Tag) Export() (string, error) {
 		return "", err
 	}
 
-	file := xlsx.NewFile()
-	sheet, err := file.AddSheet("标签信息")
+	xlsFile := xlsx.NewFile()
+	sheet, err := xlsFile.AddSheet("标签信息")
 	if err != nil {
 		return "", err
 	}
@@ -130,8 +131,13 @@ func (t *Tag) Export() (string, error) {
 	time := strconv.Itoa(int(time.Now().Unix()))
 	filename := "tags-" + time + export.EXT
 
-	fullPath := export.GetExcelFullPath() + filename
-	err = file.Save(fullPath)
+	dirFullPath := export.GetExcelFullPath()
+	err = file.IsNotExistMkDir(dirFullPath)
+	if err != nil {
+		return "", err
+	}
+
+	err = xlsFile.Save(dirFullPath + filename)
 	if err != nil {
 		return "", err
 	}
