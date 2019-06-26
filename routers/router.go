@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	_ "go-gin-example/docs"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	_ "go-gin-example/docs"
 
 	"go-gin-example/middleware/jwt"
 	"go-gin-example/pkg/export"

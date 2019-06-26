@@ -11,15 +11,15 @@ import (
 	"go-gin-example/pkg/gredis"
 	"go-gin-example/pkg/logging"
 	"go-gin-example/pkg/setting"
-	"go-gin-example/routers"
 	"go-gin-example/pkg/util"
+	"go-gin-example/routers"
 )
 
 func init() {
 	setting.Setup()
 	models.Setup()
 	logging.Setup()
-	gredis.Setup()
+	_ = gredis.Setup()
 	util.Setup()
 }
 
@@ -48,7 +48,7 @@ func main() {
 
 	log.Printf("[info] start http server listening %s", endPoint)
 
-	server.ListenAndServe()
+	_ = server.ListenAndServe()
 
 	// If you want Graceful Restart, you need a Unix system and download github.com/fvbock/endless
 	//endless.DefaultReadTimeOut = readTimeout
