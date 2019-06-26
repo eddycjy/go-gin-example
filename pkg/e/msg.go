@@ -3,6 +3,7 @@ package e
 var MsgFlags = map[int]string{
 	SUCCESS:                     "ok",
 	ERROR:                       "fail",
+	ErrorSQL:                    "SQL错误",
 	InvalidParams:               "请求参数错误",
 	ErrorExistTag:               "已存在该标签名称",
 	ErrorExistTagFail:           "获取已存在标签失败",
@@ -27,6 +28,7 @@ var MsgFlags = map[int]string{
 	ErrorAuthCheckTokenTimeout:  "Token已超时",
 	ErrorAuthToken:              "Token生成失败",
 	ErrorAuth:                   "Token错误",
+	ErrorAuthExist:              "用户已存在",
 	ErrorUploadSaveImageFail:    "保存图片失败",
 	ErrorUploadCheckImageFail:   "检查图片失败",
 	ErrorUploadCheckImageFormat: "校验图片错误，图片格式或大小有问题",

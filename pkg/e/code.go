@@ -2,8 +2,9 @@ package e
 
 const (
 	SUCCESS       = 200
-	ERROR         = 500
 	InvalidParams = 400
+	ERROR         = 500
+	ErrorSQL      = 600
 
 	ErrorExistTag      = 10001
 	ErrorExistTagFail  = 10002
@@ -30,6 +31,7 @@ const (
 	ErrorAuthCheckTokenTimeout = 20002
 	ErrorAuthToken             = 20003
 	ErrorAuth                  = 20004
+	ErrorAuthExist             = 20005
 
 	ErrorUploadSaveImageFail    = 30001
 	ErrorUploadCheckImageFail   = 30002

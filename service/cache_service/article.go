@@ -17,12 +17,12 @@ type Article struct {
 }
 
 func (a *Article) GetArticleKey() string {
-	return e.CACHE_ARTICLE + "_" + strconv.Itoa(a.ID)
+	return e.CacheArticle + "_" + strconv.Itoa(a.ID)
 }
 
 func (a *Article) GetArticlesKey() string {
 	keys := []string{
-		e.CACHE_ARTICLE,
+		e.CacheArticle,
 		"LIST",
 	}
 

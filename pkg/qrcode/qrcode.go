@@ -21,7 +21,7 @@ type QrCode struct {
 }
 
 const (
-	EXT_JPG = ".jpg"
+	ExtJpg = ".jpg"
 )
 
 // NewQrCode initialize instance
@@ -32,7 +32,7 @@ func NewQrCode(url string, width, height int, level qr.ErrorCorrectionLevel, mod
 		Height: height,
 		Level:  level,
 		Mode:   mode,
-		Ext:    EXT_JPG,
+		Ext:    ExtJpg,
 	}
 }
 

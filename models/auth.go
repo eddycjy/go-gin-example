@@ -22,3 +22,12 @@ func CheckAuth(username, password string) (bool, error) {
 
 	return false, nil
 }
+
+//注册用户
+func AddAuth(username, password string) (bool, error) {
+	err := db.Create(&Auth{Username: username, Password: password}).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return false, err
+	}
+	return true, nil
+}

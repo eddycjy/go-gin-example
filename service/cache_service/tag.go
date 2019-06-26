@@ -18,7 +18,7 @@ type Tag struct {
 
 func (t *Tag) GetTagsKey() string {
 	keys := []string{
-		e.CACHE_TAG,
+		e.CacheTag,
 		"LIST",
 	}
 
