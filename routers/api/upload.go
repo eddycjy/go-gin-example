@@ -27,7 +27,7 @@ func UploadImage(c *gin.Context) {
 	}
 
 	if image == nil {
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, e.InvalidParams, nil)
 		return
 	}
 
@@ -37,20 +37,20 @@ func UploadImage(c *gin.Context) {
 	src := fullPath + imageName
 
 	if !upload.CheckImageExt(imageName) || !upload.CheckImageSize(file) {
-		appG.Response(http.StatusBadRequest, e.ERROR_UPLOAD_CHECK_IMAGE_FORMAT, nil)
+		appG.Response(http.StatusBadRequest, e.ErrorUploadCheckImageFormat, nil)
 		return
 	}
 
 	err = upload.CheckImage(fullPath)
 	if err != nil {
 		logging.Warn(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR_UPLOAD_CHECK_IMAGE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorUploadCheckImageFail, nil)
 		return
 	}
 
 	if err := c.SaveUploadedFile(image, src); err != nil {
 		logging.Warn(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR_UPLOAD_SAVE_IMAGE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorUploadSaveImageFail, nil)
 		return
 	}
 

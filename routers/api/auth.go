@@ -36,25 +36,25 @@ func GetAuth(c *gin.Context) {
 
 	if !ok {
 		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, e.InvalidParams, nil)
 		return
 	}
 
 	authService := auth_service.Auth{Username: username, Password: password}
 	isExist, err := authService.Check()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_CHECK_TOKEN_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorAuthCheckTokenFail, nil)
 		return
 	}
 
 	if !isExist {
-		appG.Response(http.StatusUnauthorized, e.ERROR_AUTH, nil)
+		appG.Response(http.StatusUnauthorized, e.ErrorAuth, nil)
 		return
 	}
 
 	token, err := util.GenerateToken(username, password)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_TOKEN, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorAuthToken, nil)
 		return
 	}
 

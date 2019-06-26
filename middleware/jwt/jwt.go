@@ -19,15 +19,15 @@ func JWT() gin.HandlerFunc {
 		code = e.SUCCESS
 		token := c.Query("token")
 		if token == "" {
-			code = e.INVALID_PARAMS
+			code = e.InvalidParams
 		} else {
 			_, err := util.ParseToken(token)
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
 				case jwt.ValidationErrorExpired:
-					code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
+					code = e.ErrorAuthCheckTokenTimeout
 				default:
-					code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
+					code = e.ErrorAuthCheckTokenFail
 				}
 			}
 		}
