@@ -1,4 +1,4 @@
-module github.com/zhangrxiang/go-gin-example
+module go-gin-example
 
 go 1.12
 
