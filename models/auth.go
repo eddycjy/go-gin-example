@@ -31,3 +31,12 @@ func AddAuth(username, password string) (bool, error) {
 	}
 	return true, nil
 }
+
+//修改密码
+func ResetPassword(username, password, newPassword string) (bool, error) {
+	err := db.Model(Auth{}).Where(Auth{Username: username, Password: password}).Update("password", newPassword).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return false, err
+	}
+	return true, nil
+}

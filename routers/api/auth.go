@@ -17,31 +17,55 @@ type auth struct {
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
+func queryAuth(username, password string) (bool, error) {
+	valid := validation.Validation{}
+	a := auth{Username: username, Password: password}
+	ok, err := valid.Valid(&a)
+	if !ok {
+		app.MarkErrors(valid.Errors)
+		return ok, err
+	}
+	authService := auth_service.Auth{Username: username, Password: password}
+	return authService.Check()
+}
+
+//重置密码
+func ResetPassword(c *gin.Context) {
+	appG := app.Gin{C: c}
+	username := c.PostForm("username")
+	oldPassword := c.PostForm("old_password")
+	newPassword := c.PostForm("new_password")
+	isExist, err := queryAuth(username, oldPassword)
+	if isExist && (err == nil) && newPassword != "" {
+		authService := auth_service.Auth{Username: username, Password: oldPassword}
+		_, err := authService.ResetPassword(newPassword)
+		if err != nil {
+			appG.Response(http.StatusForbidden, e.ERROR, []rune{})
+			return
+		}
+		appG.Response(http.StatusOK, e.SUCCESS, []rune{})
+		return
+	}
+	appG.Response(http.StatusInternalServerError, e.InvalidParams, []rune{})
+	return
+}
+
 //注册
 func Register(c *gin.Context) {
 	appG := app.Gin{C: c}
-	valid := validation.Validation{}
 
 	username := c.PostForm("username")
 	password := c.PostForm("password")
+	isExist, err := queryAuth(username, password)
 
-	a := auth{Username: username, Password: password}
-	ok, _ := valid.Valid(&a)
-
-	if !ok {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.InvalidParams, []rune{})
-		return
-	}
-	authService := auth_service.Auth{Username: username, Password: password}
-	isExist, err := authService.Check()
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ErrorSQL, nil)
 		return
 	}
 
 	if !isExist {
-		authService.AddAuth()
+		authService := auth_service.Auth{Username: username, Password: password}
+		_, _ = authService.AddAuth()
 		appG.Response(http.StatusOK, e.SUCCESS, nil)
 		return
 	}
@@ -59,22 +83,11 @@ func Register(c *gin.Context) {
 // @Router /auth [get]
 func GetAuth(c *gin.Context) {
 	appG := app.Gin{C: c}
-	valid := validation.Validation{}
 
 	username := c.Query("username")
 	password := c.Query("password")
+	isExist, err := queryAuth(username, password)
 
-	a := auth{Username: username, Password: password}
-	ok, _ := valid.Valid(&a)
-
-	if !ok {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.InvalidParams, []rune{})
-		return
-	}
-
-	authService := auth_service.Auth{Username: username, Password: password}
-	isExist, err := authService.Check()
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ErrorAuthCheckTokenFail, nil)
 		return

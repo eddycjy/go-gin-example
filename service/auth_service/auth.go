@@ -16,3 +16,8 @@ func (a *Auth) Check() (bool, error) {
 func (a *Auth) AddAuth() (bool, error) {
 	return models.AddAuth(a.Username, a.Password)
 }
+
+//修改密码
+func (a *Auth) ResetPassword(newPassword string) (bool, error) {
+	return models.ResetPassword(a.Username, a.Password, newPassword)
+}
