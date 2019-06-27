@@ -26,9 +26,9 @@
 18. [Gin实践 番外 Golang交叉编译](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-03-26-Gin%E5%AE%9E%E8%B7%B5-%E7%95%AA%E5%A4%96-Golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91.md)
 19. [Gin实践 番外 请入门 Makefile](https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-08-26-Gin%E5%AE%9E%E8%B7%B5-%E7%95%AA%E5%A4%96-%E8%AF%B7%E5%85%A5%E9%97%A8%20Makefile.md)
 
-## 安装
+## 安装 (>= go1.12)
 ```
-$ go get github.com/EDDYCJY/go-gin-example
+$ git clone https://github.com/zhangrxiang/go-gin-example.git
 ```
 
 ## 如何运行
@@ -43,8 +43,7 @@ $ go get github.com/EDDYCJY/go-gin-example
 创建一个 `blog` 数据库，并且导入建表的 [SQL](https://github.com/EDDYCJY/go-gin-example/blob/master/docs/sql/blog.sql)
 
 ### 配置
-
-你应该修改 `conf/app.ini` 配置文件
+复制`conf/app.example.ini` =>  `conf/app.ini` 配置文件
 
 ```
 [database]
@@ -67,9 +66,8 @@ IdleTimeout = 200
 
 ### 运行
 ```
-$ cd $GOPATH/src/go-gin-example
-
-$ go run main.go 
+$ cd go-gin-example
+$ go run main.go
 ```
 
 项目的运行信息和已存在的 API's

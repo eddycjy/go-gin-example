@@ -4,9 +4,9 @@ An example of gin contains many useful features
 
 [简体中文](https://github.com/EDDYCJY/go-gin-example/blob/master/README_ZH.md)
 
-## Installation
+## Installation (>= go1.12)
 ```
-$ go get github.com/EDDYCJY/go-gin-example
+$ git clone https://github.com/zhangrxiang/go-gin-example.git
 ```
 
 ## How to run
@@ -22,7 +22,7 @@ Create a **blog database** and import [SQL](https://github.com/EDDYCJY/go-gin-ex
 
 ### Conf
 
-You should modify `conf/app.ini`
+You should copy `conf/app.example.ini` => `conf/app.ini`
 
 ```
 [database]
@@ -44,9 +44,8 @@ IdleTimeout = 200
 
 ### Run
 ```
-$ cd $GOPATH/src/go-gin-example
-
-$ go run main.go 
+$ cd go-gin-example
+$ go run main.go
 ```
 
 Project information and existing API
