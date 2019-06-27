@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"go-gin-example/pkg/setting"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
@@ -21,7 +22,10 @@ func JWT() gin.HandlerFunc {
 		if token == "" {
 			code = e.InvalidParams
 		} else {
-			_, err := util.ParseToken(token)
+			data, err := util.ParseToken(token)
+			if data != nil {
+				setting.Username = util.GetUsername(data)
+			}
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
 				case jwt.ValidationErrorExpired:

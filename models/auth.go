@@ -1,6 +1,8 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 type Auth struct {
 	ID       int    `gorm:"primary_key" json:"id"`
@@ -39,4 +41,13 @@ func ResetPassword(username, password, newPassword string) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func Detail(username string) (Auth, error) {
+	var auth Auth
+	err := db.First(&auth).Where("username", username).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return auth, err
+	}
+	return auth, nil
 }

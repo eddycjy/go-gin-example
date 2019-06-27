@@ -26,6 +26,7 @@ func GenerateToken(username, password string) (string, error) {
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "gin-blog",
+			Subject:   username,
 		},
 	}
 
@@ -48,4 +49,8 @@ func ParseToken(token string) (*Claims, error) {
 	}
 
 	return nil, err
+}
+
+func GetUsername(claims *Claims) string {
+	return claims.StandardClaims.Subject
 }

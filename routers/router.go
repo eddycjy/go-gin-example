@@ -35,6 +35,12 @@ func InitRouter() *gin.Engine {
 		auth.GET("/login", api.GetAuth)
 		auth.POST("/register", api.Register)
 		auth.POST("/reset-password", api.ResetPassword)
+		a := auth.Group("")
+		a.Use(jwt.JWT())
+		{
+			a.GET("/detail", api.GetDetail)
+			a.GET("/lists", api.GetLists)
+		}
 	}
 
 	apiv1 := r.Group("/api/v1")

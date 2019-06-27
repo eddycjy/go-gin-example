@@ -7,6 +7,8 @@ import (
 	"github.com/go-ini/ini"
 )
 
+var Username string
+
 type App struct {
 	JwtSecret     string
 	JwtExpireTime int

@@ -29,6 +29,30 @@ func queryAuth(username, password string) (bool, error) {
 	return authService.Check()
 }
 
+//
+func GetLists(c *gin.Context) {
+
+	appG := app.Gin{C: c}
+	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"id":       1,
+		"name":     "zing",
+		"password": "123",
+	})
+	return
+}
+
+func GetDetail(c *gin.Context) {
+	appG := app.Gin{C: c}
+
+	authService := auth_service.Auth{}
+	detail, err := authService.Detail()
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR, "")
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, detail)
+	return
+}
+
 //重置密码
 func ResetPassword(c *gin.Context) {
 	appG := app.Gin{C: c}
