@@ -51,3 +51,12 @@ func Detail(username string) (Auth, error) {
 	}
 	return auth, nil
 }
+
+func All() ([]Auth, error) {
+	var auth []Auth
+	err := db.Find(&auth).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return auth, err
+	}
+	return auth, nil
+}

@@ -4,7 +4,6 @@ go 1.12
 
 require (
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
-	github.com/EDDYCJY/go-gin-example v0.0.0-20190519043325-661685173c57 // indirect
 	github.com/Unknwon/com v0.0.0-20190321035513-0fed4efef755
 	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc
 	github.com/astaxie/beego v1.11.1
@@ -18,8 +17,8 @@ require (
 	github.com/swaggo/gin-swagger v1.1.0
 	github.com/swaggo/swag v1.5.0
 	github.com/tealeg/xlsx v1.0.3
-	github.com/ugorji/go v1.1.4
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect
+	gopkg.in/ini.v1 v1.42.0 // indirect
 )
 
 replace github.com/ugorji/go v1.1.4 => github.com/ugorji/go/codec v0.0.0-20190204201341-e444a5086c43

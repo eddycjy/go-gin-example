@@ -29,3 +29,8 @@ func (a *Auth) ResetPassword(newPassword string) (bool, error) {
 func (a *Auth) Detail() (models.Auth, error) {
 	return models.Detail(setting.Username)
 }
+
+//列表
+func (a *Auth) Lists() ([]models.Auth, error) {
+	return models.All()
+}

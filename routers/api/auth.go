@@ -17,6 +17,7 @@ type auth struct {
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
+//查询
 func queryAuth(username, password string) (bool, error) {
 	valid := validation.Validation{}
 	a := auth{Username: username, Password: password}
@@ -29,18 +30,20 @@ func queryAuth(username, password string) (bool, error) {
 	return authService.Check()
 }
 
-//
+// 列表
 func GetLists(c *gin.Context) {
 
 	appG := app.Gin{C: c}
-	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
-		"id":       1,
-		"name":     "zing",
-		"password": "123",
-	})
+	authService := auth_service.Auth{}
+	lists, err := authService.Lists()
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR, "")
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, lists)
 	return
 }
 
+// 详情
 func GetDetail(c *gin.Context) {
 	appG := app.Gin{C: c}
 
