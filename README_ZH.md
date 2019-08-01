@@ -28,7 +28,7 @@
 
 ## 安装
 ```
-$ go get github.com/EDDYCJY/go-gin-example
+$ go get github.com/i5yi/go-gin-example
 ```
 
 ## 如何运行
