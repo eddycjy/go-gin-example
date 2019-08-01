@@ -6,7 +6,7 @@ An example of gin contains many useful features
 
 ## Installation
 ```
-$ go get github.com/ityi/go-gin-example
+$ go get github.com/i5yi/go-gin-example
 ```
 
 ## How to run
