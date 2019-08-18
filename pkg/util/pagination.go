@@ -4,7 +4,7 @@ import (
 	"github.com/Unknwon/com"
 	"github.com/gin-gonic/gin"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
+	"go-gin-example/pkg/setting"
 )
 
 // GetPage get page parameters

@@ -5,16 +5,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	_ "github.com/EDDYCJY/go-gin-example/docs"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	_ "go-gin-example/docs"
 
-	"github.com/EDDYCJY/go-gin-example/middleware/jwt"
-	"github.com/EDDYCJY/go-gin-example/pkg/export"
-	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
-	"github.com/EDDYCJY/go-gin-example/pkg/upload"
-	"github.com/EDDYCJY/go-gin-example/routers/api"
-	"github.com/EDDYCJY/go-gin-example/routers/api/v1"
+	"go-gin-example/middleware/jwt"
+	"go-gin-example/pkg/export"
+	"go-gin-example/pkg/qrcode"
+	"go-gin-example/pkg/upload"
+	"go-gin-example/routers/api"
+	"go-gin-example/routers/api/v1"
 )
 
 // InitRouter initialize routing information
@@ -27,9 +27,21 @@ func InitRouter() *gin.Engine {
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 	r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
 
-	r.GET("/auth", api.GetAuth)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.POST("/upload", api.UploadImage)
+
+	auth := r.Group("/auth")
+	{
+		auth.GET("/login", api.GetAuth)
+		auth.POST("/register", api.Register)
+		auth.POST("/reset-password", api.ResetPassword)
+		a := auth.Group("")
+		a.Use(jwt.JWT())
+		{
+			a.GET("/detail", api.GetDetail)
+			a.GET("/lists", api.GetLists)
+		}
+	}
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWT())

@@ -9,9 +9,9 @@ import (
 
 	"github.com/golang/freetype"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/file"
-	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
+	"go-gin-example/pkg/file"
+	"go-gin-example/pkg/qrcode"
+	"go-gin-example/pkg/setting"
 )
 
 type ArticlePoster struct {

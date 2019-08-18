@@ -1,13 +1,14 @@
 package jwt
 
 import (
+	"go-gin-example/pkg/setting"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
-	"github.com/EDDYCJY/go-gin-example/pkg/util"
+	"go-gin-example/pkg/e"
+	"go-gin-example/pkg/util"
 )
 
 // JWT is jwt middleware
@@ -19,15 +20,18 @@ func JWT() gin.HandlerFunc {
 		code = e.SUCCESS
 		token := c.Query("token")
 		if token == "" {
-			code = e.INVALID_PARAMS
+			code = e.InvalidParams
 		} else {
-			_, err := util.ParseToken(token)
+			data, err := util.ParseToken(token)
+			if data != nil {
+				setting.Username = util.GetUsername(data)
+			}
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
 				case jwt.ValidationErrorExpired:
-					code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
+					code = e.ErrorAuthCheckTokenTimeout
 				default:
-					code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
+					code = e.ErrorAuthCheckTokenFail
 				}
 			}
 		}

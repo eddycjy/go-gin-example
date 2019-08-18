@@ -7,10 +7,13 @@ import (
 	"github.com/go-ini/ini"
 )
 
+var Username string
+
 type App struct {
-	JwtSecret string
-	PageSize  int
-	PrefixUrl string
+	JwtSecret     string
+	JwtExpireTime int
+	PageSize      int
+	PrefixUrl     string
 
 	RuntimeRootPath string
 

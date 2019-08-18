@@ -2,7 +2,7 @@ package logging
 
 import (
 	"fmt"
-	"github.com/EDDYCJY/go-gin-example/pkg/file"
+	"go-gin-example/pkg/file"
 	"log"
 	"os"
 	"path/filepath"
@@ -75,9 +75,9 @@ func Fatal(v ...interface{}) {
 
 // setPrefix set the prefix of the log output
 func setPrefix(level Level) {
-	_, file, line, ok := runtime.Caller(DefaultCallerDepth)
+	_, s, line, ok := runtime.Caller(DefaultCallerDepth)
 	if ok {
-		logPrefix = fmt.Sprintf("[%s][%s:%d]", levelFlags[level], filepath.Base(file), line)
+		logPrefix = fmt.Sprintf("[%s][%s:%d]", levelFlags[level], filepath.Base(s), line)
 	} else {
 		logPrefix = fmt.Sprintf("[%s]", levelFlags[level])
 	}

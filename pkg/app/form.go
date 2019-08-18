@@ -5,14 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
+	"go-gin-example/pkg/e"
 )
 
 // BindAndValid binds and validates data
 func BindAndValid(c *gin.Context, form interface{}) (int, int) {
 	err := c.Bind(form)
 	if err != nil {
-		return http.StatusBadRequest, e.INVALID_PARAMS
+		return http.StatusBadRequest, e.InvalidParams
 	}
 
 	valid := validation.Validation{}
@@ -22,7 +22,7 @@ func BindAndValid(c *gin.Context, form interface{}) (int, int) {
 	}
 	if !check {
 		MarkErrors(valid.Errors)
-		return http.StatusBadRequest, e.INVALID_PARAMS
+		return http.StatusBadRequest, e.InvalidParams
 	}
 
 	return http.StatusOK, e.SUCCESS

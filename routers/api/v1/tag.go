@@ -7,13 +7,13 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/app"
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
-	"github.com/EDDYCJY/go-gin-example/pkg/export"
-	"github.com/EDDYCJY/go-gin-example/pkg/logging"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
-	"github.com/EDDYCJY/go-gin-example/pkg/util"
-	"github.com/EDDYCJY/go-gin-example/service/tag_service"
+	"go-gin-example/pkg/app"
+	"go-gin-example/pkg/e"
+	"go-gin-example/pkg/export"
+	"go-gin-example/pkg/logging"
+	"go-gin-example/pkg/setting"
+	"go-gin-example/pkg/util"
+	"go-gin-example/service/tag_service"
 )
 
 // @Summary Get multiple article tags
@@ -39,13 +39,13 @@ func GetTags(c *gin.Context) {
 	}
 	tags, err := tagService.GetAll()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_GET_TAGS_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorGetTagsFail, nil)
 		return
 	}
 
 	count, err := tagService.Count()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_COUNT_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorCountTagFail, nil)
 		return
 	}
 
@@ -88,17 +88,17 @@ func AddTag(c *gin.Context) {
 	}
 	exists, err := tagService.ExistByName()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorExistTagFail, nil)
 		return
 	}
 	if exists {
-		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG, nil)
+		appG.Response(http.StatusOK, e.ErrorExistTag, nil)
 		return
 	}
 
 	err = tagService.Add()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_ADD_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorAddTagFail, nil)
 		return
 	}
 
@@ -142,18 +142,18 @@ func EditTag(c *gin.Context) {
 
 	exists, err := tagService.ExistByID()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorExistTagFail, nil)
 		return
 	}
 
 	if !exists {
-		appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_TAG, nil)
+		appG.Response(http.StatusOK, e.ErrorNotExistTag, nil)
 		return
 	}
 
 	err = tagService.Edit()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_EDIT_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorEditTagFail, nil)
 		return
 	}
 
@@ -174,23 +174,23 @@ func DeleteTag(c *gin.Context) {
 
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, e.InvalidParams, nil)
 	}
 
 	tagService := tag_service.Tag{ID: id}
 	exists, err := tagService.ExistByID()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorExistTagFail, nil)
 		return
 	}
 
 	if !exists {
-		appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_TAG, nil)
+		appG.Response(http.StatusOK, e.ErrorNotExistTag, nil)
 		return
 	}
 
 	if err := tagService.Delete(); err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_DELETE_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorDeleteTagFail, nil)
 		return
 	}
 
@@ -219,7 +219,7 @@ func ExportTag(c *gin.Context) {
 
 	filename, err := tagService.Export()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_EXPORT_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorExportTagFail, nil)
 		return
 	}
 
@@ -249,7 +249,7 @@ func ImportTag(c *gin.Context) {
 	err = tagService.Import(file)
 	if err != nil {
 		logging.Warn(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR_IMPORT_TAG_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorImportTagFail, nil)
 		return
 	}
 

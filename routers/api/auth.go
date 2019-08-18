@@ -6,15 +6,99 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/app"
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
-	"github.com/EDDYCJY/go-gin-example/pkg/util"
-	"github.com/EDDYCJY/go-gin-example/service/auth_service"
+	"go-gin-example/pkg/app"
+	"go-gin-example/pkg/e"
+	"go-gin-example/pkg/util"
+	"go-gin-example/service/auth_service"
 )
 
 type auth struct {
 	Username string `valid:"Required; MaxSize(50)"`
 	Password string `valid:"Required; MaxSize(50)"`
+}
+
+//查询
+func queryAuth(username, password string) (bool, error) {
+	valid := validation.Validation{}
+	a := auth{Username: username, Password: password}
+	ok, err := valid.Valid(&a)
+	if !ok {
+		app.MarkErrors(valid.Errors)
+		return ok, err
+	}
+	authService := auth_service.Auth{Username: username, Password: password}
+	return authService.Check()
+}
+
+// 列表
+func GetLists(c *gin.Context) {
+
+	appG := app.Gin{C: c}
+	authService := auth_service.Auth{}
+	lists, err := authService.Lists()
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR, "")
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, lists)
+	return
+}
+
+// 详情
+func GetDetail(c *gin.Context) {
+	appG := app.Gin{C: c}
+
+	authService := auth_service.Auth{}
+	detail, err := authService.Detail()
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR, "")
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, detail)
+	return
+}
+
+//重置密码
+func ResetPassword(c *gin.Context) {
+	appG := app.Gin{C: c}
+	username := c.PostForm("username")
+	oldPassword := c.PostForm("old_password")
+	newPassword := c.PostForm("new_password")
+	isExist, err := queryAuth(username, oldPassword)
+	if isExist && (err == nil) && newPassword != "" {
+		authService := auth_service.Auth{Username: username, Password: oldPassword}
+		_, err := authService.ResetPassword(newPassword)
+		if err != nil {
+			appG.Response(http.StatusForbidden, e.ERROR, []rune{})
+			return
+		}
+		appG.Response(http.StatusOK, e.SUCCESS, []rune{})
+		return
+	}
+	appG.Response(http.StatusInternalServerError, e.InvalidParams, []rune{})
+	return
+}
+
+//注册
+func Register(c *gin.Context) {
+	appG := app.Gin{C: c}
+
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+	isExist, err := queryAuth(username, password)
+
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ErrorSQL, nil)
+		return
+	}
+
+	if !isExist {
+		authService := auth_service.Auth{Username: username, Password: password}
+		_, _ = authService.AddAuth()
+		appG.Response(http.StatusOK, e.SUCCESS, nil)
+		return
+	}
+	appG.Response(http.StatusForbidden, e.ErrorAuthExist, nil)
+	return
+
 }
 
 // @Summary Get Auth
@@ -26,35 +110,24 @@ type auth struct {
 // @Router /auth [get]
 func GetAuth(c *gin.Context) {
 	appG := app.Gin{C: c}
-	valid := validation.Validation{}
 
 	username := c.Query("username")
 	password := c.Query("password")
+	isExist, err := queryAuth(username, password)
 
-	a := auth{Username: username, Password: password}
-	ok, _ := valid.Valid(&a)
-
-	if !ok {
-		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
-		return
-	}
-
-	authService := auth_service.Auth{Username: username, Password: password}
-	isExist, err := authService.Check()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_CHECK_TOKEN_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorAuthCheckTokenFail, nil)
 		return
 	}
 
 	if !isExist {
-		appG.Response(http.StatusUnauthorized, e.ERROR_AUTH, nil)
+		appG.Response(http.StatusUnauthorized, e.ErrorAuth, nil)
 		return
 	}
 
 	token, err := util.GenerateToken(username, password)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_TOKEN, nil)
+		appG.Response(http.StatusInternalServerError, e.ErrorAuthToken, nil)
 		return
 	}
 
