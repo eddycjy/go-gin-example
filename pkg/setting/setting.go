@@ -85,6 +85,6 @@ func Setup() {
 func mapTo(section string, v interface{}) {
 	err := cfg.Section(section).MapTo(v)
 	if err != nil {
-		log.Fatalf("Cfg.MapTo RedisSetting err: %v", err)
+		log.Fatalf("Cfg.MapTo %s err: %v", section, err)
 	}
 }
