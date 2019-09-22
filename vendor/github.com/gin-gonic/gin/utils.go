@@ -49,7 +49,7 @@ func WrapH(h http.Handler) HandlerFunc {
 	}
 }
 
-// H is a shortcup for map[string]interface{}
+// H is a shortcut for map[string]interface{}
 type H map[string]interface{}
 
 // MarshalXML allows type H to be used with xml.Marshal.
@@ -103,10 +103,7 @@ func parseAccept(acceptHeader string) []string {
 	parts := strings.Split(acceptHeader, ",")
 	out := make([]string, 0, len(parts))
 	for _, part := range parts {
-		if index := strings.IndexByte(part, ';'); index >= 0 {
-			part = part[0:index]
-		}
-		if part = strings.TrimSpace(part); part != "" {
+		if part = strings.TrimSpace(strings.Split(part, ";")[0]); part != "" {
 			out = append(out, part)
 		}
 	}

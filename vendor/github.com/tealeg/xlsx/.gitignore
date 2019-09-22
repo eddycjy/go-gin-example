@@ -1,0 +1,5 @@
+.vscode
+.DS_Store
+xlsx.test
+*.swp
+coverage.txt
