@@ -115,7 +115,7 @@ type EditTagForm struct {
 // @Summary Update article tag
 // @Produce  json
 // @Param id path int true "ID"
-// @Param name body string true "ID"
+// @Param name body string true "Name"
 // @Param state body int false "State"
 // @Param modified_by body string true "ModifiedBy"
 // @Success 200 {object} app.Response
