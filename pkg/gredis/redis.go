@@ -115,3 +115,128 @@ func LikeDeletes(key string) error {
 
 	return nil
 }
+
+
+//原子增加数值increment
+func IncrBy(key string, increment int) (int, error) {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	value, err := redis.Int(conn.Do("INCR", key))
+	if err != nil {
+		return 0, err
+	}
+
+	return value, nil
+
+}
+
+//原子增加数值1
+func Incr(key string) (int, error) {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	value, err := redis.Int(conn.Do("INCR", key))
+	if err != nil {
+		return 0, err
+	}
+
+	return value, nil
+}
+
+//设置过期时间戳
+func ExpireAt(key string, timestamp int64) error {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	_, err := conn.Do("EXPIREAT", key, timestamp)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//原子增加数值1,设置过期时间戳
+func IncrExpireAt(key string, timestamp int64) (int, error) {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	value, err := redis.Int(conn.Do("INCR", key))
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = conn.Do("EXPIREAT", key, timestamp)
+	if err != nil {
+		return 0, err
+	}
+
+	return value, nil
+}
+
+//LPush
+func LPush(key string, value interface{}) error {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	_, err := conn.Do("LPUSH", key, value)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+//LPush
+func LRem(key string, count int, value interface{}) error {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	_, err := conn.Do("LREM", key, count, value)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+//BRPop
+func BRPop(key string, timeout int) (interface{}, error) {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	var value1 string
+	var value2 string
+
+	reply, err := redis.Values(conn.Do("BRPOP", key, timeout))
+	if err != nil {
+		return value2, err
+	}
+
+	if _, err := redis.Scan(reply, &value1, &value2); err != nil {
+		return value2, err
+	}
+
+	return value2, nil
+}
+
+//ZRangeByScore
+func ZRangeByScore(key string, startScore, endScore float64) ([]string, error) {
+	conn := RedisConn.Get()
+	defer conn.Close()
+	var resultList []string
+
+	values, err := redis.Values(conn.Do("ZRANGEBYSCORE", key, startScore, endScore))
+	if err != nil {
+		return resultList, err
+	}
+
+	if err := redis.ScanSlice(values, &resultList); err != nil {
+		return resultList, err
+	}
+
+	return resultList, nil
+}
