@@ -4,8 +4,6 @@ github.com/360EntSecGroup-Skylar/excelize
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
-# github.com/Unknwon/com v0.0.0-20170819223952-7677a1d7c113
-github.com/Unknwon/com
 # github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 github.com/alecthomas/template
 github.com/alecthomas/template/parse
@@ -73,6 +71,8 @@ github.com/swaggo/swag
 github.com/tealeg/xlsx
 # github.com/ugorji/go/codec v0.0.0-20181209151446-772ced7fd4c2
 github.com/ugorji/go/codec
+# github.com/unknwon/com v1.0.1
+github.com/unknwon/com
 # golang.org/x/image v0.0.0-20180628062038-cc896f830ced
 golang.org/x/image/font
 golang.org/x/image/math/fixed
