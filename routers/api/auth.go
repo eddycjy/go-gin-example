@@ -28,8 +28,8 @@ func GetAuth(c *gin.Context) {
 	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 
-	username := c.Query("username")
-	password := c.Query("password")
+	username := c.PostForm("username")
+	password := c.PostForm("password")
 
 	a := auth{Username: username, Password: password}
 	ok, _ := valid.Valid(&a)
