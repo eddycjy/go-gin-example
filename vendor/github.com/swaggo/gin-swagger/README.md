@@ -21,7 +21,7 @@ $ go get -u github.com/swaggo/swag/cmd/swag
 ```sh
 $ swag init
 ```
-4.Download [gin-swagger](https://github.com/swaggo/gin-swagger) by using:
+4. Download [gin-swagger](https://github.com/swaggo/gin-swagger) by using:
 ```sh
 $ go get -u github.com/swaggo/gin-swagger
 $ go get -u github.com/swaggo/gin-swagger/swaggerFiles
@@ -64,8 +64,11 @@ import (
 func main() {
 	r := gin.New()
     
-    // use ginSwagger middleware to 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	config := &ginSwagger.Config{
+		URL: "http://localhost:8080/swagger/doc.json", //The url pointing to API definition
+	}
+	// use ginSwagger middleware to 
+	r.GET("/swagger/*any", ginSwagger.CustomWrapHandler(config, swaggerFiles.Handler))
 
 	r.Run()
 }

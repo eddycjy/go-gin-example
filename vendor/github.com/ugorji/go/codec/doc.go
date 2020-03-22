@@ -14,15 +14,11 @@ Supported Serialization formats are:
   - json:    http://json.org http://tools.ietf.org/html/rfc7159
   - simple:
 
-To install:
-
-    go get github.com/ugorji/go/codec
-
-This package will carefully use 'unsafe' for performance reasons in specific places.
+This package will carefully use 'package unsafe' for performance reasons in specific places.
 You can build without unsafe use by passing the safe or appengine tag
-i.e. 'go install -tags=safe ...'. Note that unsafe is only supported for the last 3
-go sdk versions e.g. current go release is go 1.9, so we support unsafe use only from
-go 1.7+ . This is because supporting unsafe requires knowledge of implementation details.
+i.e. 'go install -tags=safe ...'. Note that unsafe is only supported for the last 4
+go releases e.g. current go release is go 1.12, so we support unsafe use only from
+go 1.9+ . This is because supporting unsafe requires knowledge of implementation details.
 
 For detailed usage information, read the primer at http://ugorji.net/blog/go-codec-primer .
 
@@ -109,7 +105,7 @@ We determine how to encode or decode by walking this decision tree
   - is there an extension registered for the type?
   - is format binary, and is type a encoding.BinaryMarshaler and BinaryUnmarshaler?
   - is format specifically json, and is type a encoding/json.Marshaler and Unmarshaler?
-  - is format text-based, and type an encoding.TextMarshaler?
+  - is format text-based, and type an encoding.TextMarshaler and TextUnmarshaler?
   - else we use a pair of functions based on the "kind" of the type e.g. map, slice, int64, etc
 
 This symmetry is important to reduce chances of issues happening because the
@@ -206,7 +202,34 @@ You can run the tag 'safe' to run tests or build in safe mode. e.g.
 
 Running Benchmarks
 
+    cd bench
+    go test -bench . -benchmem -benchtime 1s
+    
 Please see http://github.com/ugorji/go-codec-bench .
+
+Managing Binary Size
+
+This package adds some size to any binary that depends on it.
+This is because we include an auto-generated file: `fast-path.generated.go`
+to help with performance when encoding/decoding slices and maps of
+built in numeric, boolean, string and interface{} types.
+
+Prior to 2019-05-16, this package could add about 11MB to the size of your binaries.
+We have now trimmed that in half, and the package contributes about 5.5MB.
+
+You can override this by building (or running tests and benchmarks)
+with the tag: `notfastpath`.
+
+    go install -tags notfastpath
+    go build -tags notfastpath
+    go test -tags notfastpath
+
+With the tag `notfastpath`, we trim that size to about 2.9MB.
+
+Be aware that, at least in our representative microbenchmarks for cbor (for example),
+passing `notfastpath` tag causes up to 33% increase in decoding and
+50% increase in encoding speeds.
+YMMV.
 
 Caveats
 

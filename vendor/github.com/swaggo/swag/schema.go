@@ -2,11 +2,12 @@ package swag
 
 import "fmt"
 
-// CheckSchemaType TODO: NEEDS COMMENT INFO
-func CheckSchemaType(typeName string) {
+// CheckSchemaType checks if typeName is not a name of primitive type
+func CheckSchemaType(typeName string) error {
 	if !IsPrimitiveType(typeName) {
-		panic(fmt.Errorf("%s is not basic types", typeName))
+		return fmt.Errorf("%s is not basic types", typeName)
 	}
+	return nil
 }
 
 // IsPrimitiveType determine whether the type name is a primitive type
@@ -17,6 +18,11 @@ func IsPrimitiveType(typeName string) bool {
 	default:
 		return false
 	}
+}
+
+// IsNumericType determines whether the swagger type name is a numeric type
+func IsNumericType(typeName string) bool {
+	return typeName == "integer" || typeName == "number"
 }
 
 // TransToValidSchemeType indicates type will transfer golang basic type to swagger supported type.
