@@ -163,6 +163,7 @@ func AddArticle(c *gin.Context) {
 		Content:       form.Content,
 		CoverImageUrl: form.CoverImageUrl,
 		State:         form.State,
+		CreatedBy:     form.CreatedBy,
 	}
 	if err := articleService.Add(); err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR_ADD_ARTICLE_FAIL, nil)
