@@ -50,7 +50,7 @@ func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 	)
 
 	if pageSize > 0 && pageNum > 0 {
-		err = db.Where(maps).Find(&tags).Offset(pageNum).Limit(pageSize).Error
+		err = db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags).Error
 	} else {
 		err = db.Where(maps).Find(&tags).Error
 	}
