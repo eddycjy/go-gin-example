@@ -23,16 +23,16 @@ func (t *Tag) GetTagsKey() string {
 	}
 
 	if t.Name != "" {
-		keys = append(keys, t.Name)
+		keys = append(keys, "name_" + t.Name)
 	}
 	if t.State >= 0 {
-		keys = append(keys, strconv.Itoa(t.State))
+		keys = append(keys, "state_" + strconv.Itoa(t.State))
 	}
 	if t.PageNum > 0 {
-		keys = append(keys, strconv.Itoa(t.PageNum))
+		keys = append(keys, "pagenum_" + strconv.Itoa(t.PageNum))
 	}
 	if t.PageSize > 0 {
-		keys = append(keys, strconv.Itoa(t.PageSize))
+		keys = append(keys, "pagesize_" + strconv.Itoa(t.PageSize))
 	}
 
 	return strings.Join(keys, "_")
