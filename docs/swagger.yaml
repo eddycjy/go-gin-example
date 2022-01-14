@@ -227,7 +227,7 @@ paths:
         in: body
         name: created_by
         schema:
-          type: integer
+          type: string
       produces:
       - application/json
       responses:
