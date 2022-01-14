@@ -65,7 +65,7 @@ type AddTagForm struct {
 // @Produce  json
 // @Param name body string true "Name"
 // @Param state body int false "State"
-// @Param created_by body int false "CreatedBy"
+// @Param created_by body string false "CreatedBy"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /api/v1/tags [post]
