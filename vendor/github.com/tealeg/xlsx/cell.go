@@ -4,55 +4,38 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 	"time"
-)
-
-const (
-	maxNonScientificNumber = 1e11
-	minNonScientificNumber = 1e-9
 )
 
 // CellType is an int type for storing metadata about the data type in the cell.
 type CellType int
 
-// These are the cell types from the ST_CellType spec
+// Known types for cell values.
 const (
 	CellTypeString CellType = iota
-	// CellTypeStringFormula is a specific format for formulas that return string values. Formulas that return numbers
-	// and booleans are stored as those types.
-	CellTypeStringFormula
+	CellTypeFormula
 	CellTypeNumeric
 	CellTypeBool
-	// CellTypeInline is not respected on save, all inline string cells will be saved as SharedStrings
-	// when saving to an XLSX file. This the same behavior as that found in Excel.
 	CellTypeInline
 	CellTypeError
-	// d (Date): Cell contains a date in the ISO 8601 format.
-	// That is the only mention of this format in the XLSX spec.
-	// Date seems to be unused by the current version of Excel, it stores dates as Numeric cells with a date format string.
-	// For now these cells will have their value output directly. It is unclear if the value is supposed to be parsed
-	// into a number and then formatted using the formatting or not.
 	CellTypeDate
+	CellTypeGeneral
 )
-
-func (ct CellType) Ptr() *CellType {
-	return &ct
-}
 
 // Cell is a high level structure intended to provide user access to
 // the contents of Cell within an xlsx.Row.
 type Cell struct {
-	Row          *Row
-	Value        string
-	formula      string
-	style        *Style
-	NumFmt       string
-	parsedNumFmt *parsedNumberFormat
-	date1904     bool
-	Hidden       bool
-	HMerge       int
-	VMerge       int
-	cellType     CellType
+	Row      *Row
+	Value    string
+	formula  string
+	style    *Style
+	NumFmt   string
+	date1904 bool
+	Hidden   bool
+	HMerge   int
+	VMerge   int
+	cellType CellType
 }
 
 // CellInterface defines the public API of the Cell.
@@ -63,7 +46,7 @@ type CellInterface interface {
 
 // NewCell creates a cell and adds it to a row.
 func NewCell(r *Row) *Cell {
-	return &Cell{Row: r, NumFmt: "general"}
+	return &Cell{Row: r}
 }
 
 // Merge with other cells, horizontally and/or vertically.
@@ -124,9 +107,15 @@ func (c *Cell) GetTime(date1904 bool) (t time.Time, err error) {
 // SetFloatWithFormat sets the value of a cell to a float and applies
 // formatting to the cell.
 func (c *Cell) SetFloatWithFormat(n float64, format string) {
-	c.SetValue(n)
+	// beauty the output when the float is small enough
+	if n != 0 && n < 0.00001 {
+		c.Value = strconv.FormatFloat(n, 'e', -1, 64)
+	} else {
+		c.Value = strconv.FormatFloat(n, 'f', -1, 64)
+	}
 	c.NumFmt = format
 	c.formula = ""
+	c.cellType = CellTypeNumeric
 }
 
 var timeLocationUTC, _ = time.LoadLocation("UTC")
@@ -182,7 +171,7 @@ func (c *Cell) SetDateTimeWithFormat(n float64, format string) {
 	c.Value = strconv.FormatFloat(n, 'f', -1, 64)
 	c.NumFmt = format
 	c.formula = ""
-	c.cellType = CellTypeNumeric
+	c.cellType = CellTypeDate
 }
 
 // Float returns the value of cell as a number.
@@ -208,20 +197,6 @@ func (c *Cell) Int64() (int64, error) {
 	return f, nil
 }
 
-// GeneralNumeric returns the value of the cell as a string. It is formatted very closely to the the XLSX spec for how
-// to display values when the storage type is Number and the format type is General. It is not 100% identical to the
-// spec but is as close as you can get using the built in Go formatting tools.
-func (c *Cell) GeneralNumeric() (string, error) {
-	return generalNumericScientific(c.Value, true)
-}
-
-// GeneralNumericWithoutScientific returns numbers that are always formatted as numbers, but it does not follow
-// the rules for when XLSX should switch to scientific notation, since sometimes scientific notation is not desired,
-// even if that is how the document is supposed to be formatted.
-func (c *Cell) GeneralNumericWithoutScientific() (string, error) {
-	return generalNumericScientific(c.Value, false)
-}
-
 // SetInt sets a cell's value to an integer.
 func (c *Cell) SetInt(n int) {
 	c.SetValue(n)
@@ -231,19 +206,10 @@ func (c *Cell) SetInt(n int) {
 func (c *Cell) SetValue(n interface{}) {
 	switch t := n.(type) {
 	case time.Time:
-		c.SetDateTime(t)
+		c.SetDateTime(n.(time.Time))
 		return
-	case int, int8, int16, int32, int64:
-		c.setNumeric(fmt.Sprintf("%d", n))
-	case float64:
-		// When formatting floats, do not use fmt.Sprintf("%v", n), this will cause numbers below 1e-4 to be printed in
-		// scientific notation. Scientific notation is not a valid way to store numbers in XML.
-		// Also not not use fmt.Sprintf("%f", n), this will cause numbers to be stored as X.XXXXXX. Which means that
-		// numbers will lose precision and numbers with fewer significant digits such as 0 will be stored as 0.000000
-		// which causes tests to fail.
-		c.setNumeric(strconv.FormatFloat(t, 'f', -1, 64))
-	case float32:
-		c.setNumeric(strconv.FormatFloat(float64(t), 'f', -1, 32))
+	case int, int8, int16, int32, int64, float32, float64:
+		c.setGeneral(fmt.Sprintf("%v", n))
 	case string:
 		c.SetString(t)
 	case []byte:
@@ -255,12 +221,12 @@ func (c *Cell) SetValue(n interface{}) {
 	}
 }
 
-// setNumeric sets a cell's value to a number
-func (c *Cell) setNumeric(s string) {
+// SetInt sets a cell's value to an integer.
+func (c *Cell) setGeneral(s string) {
 	c.Value = s
 	c.NumFmt = builtInNumFmt[builtInNumFmtIndex_GENERAL]
 	c.formula = ""
-	c.cellType = CellTypeNumeric
+	c.cellType = CellTypeGeneral
 }
 
 // Int returns the value of cell as integer.
@@ -293,7 +259,7 @@ func (c *Cell) Bool() bool {
 		return c.Value == "1"
 	}
 	// If numeric, base it on a non-zero.
-	if c.cellType == CellTypeNumeric {
+	if c.cellType == CellTypeNumeric || c.cellType == CellTypeGeneral {
 		return c.Value != "0"
 	}
 	// Return whether there's an empty string.
@@ -303,12 +269,7 @@ func (c *Cell) Bool() bool {
 // SetFormula sets the format string for a cell.
 func (c *Cell) SetFormula(formula string) {
 	c.formula = formula
-	c.cellType = CellTypeNumeric
-}
-
-func (c *Cell) SetStringFormula(formula string) {
-	c.formula = formula
-	c.cellType = CellTypeStringFormula
+	c.cellType = CellTypeFormula
 }
 
 // Formula returns the formula string for the cell.
@@ -350,24 +311,143 @@ func (c *Cell) formatToInt(format string) (string, error) {
 	return fmt.Sprintf(format, int(f)), nil
 }
 
-// getNumberFormat will update the parsedNumFmt struct if it has become out of date, since a cell's NumFmt string is a
-// public field that could be edited by clients.
-func (c *Cell) getNumberFormat() *parsedNumberFormat {
-	if c.parsedNumFmt == nil || c.parsedNumFmt.numFmt != c.NumFmt {
-		c.parsedNumFmt = parseFullNumberFormatString(c.NumFmt)
-	}
-	return c.parsedNumFmt
-}
-
 // FormattedValue returns a value, and possibly an error condition
 // from a Cell.  If it is possible to apply a format to the cell
 // value, it will do so, if not then an error will be returned, along
 // with the raw value of the Cell.
 func (c *Cell) FormattedValue() (string, error) {
-	fullFormat := c.getNumberFormat()
-	returnVal, err := fullFormat.FormatValue(c)
-	if fullFormat.parseEncounteredError != nil {
-		return returnVal, *fullFormat.parseEncounteredError
+	var numberFormat = c.GetNumberFormat()
+	if isTimeFormat(numberFormat) {
+		return parseTime(c)
 	}
-	return returnVal, err
+	switch numberFormat {
+	case builtInNumFmt[builtInNumFmtIndex_GENERAL], builtInNumFmt[builtInNumFmtIndex_STRING]:
+		return c.Value, nil
+	case builtInNumFmt[builtInNumFmtIndex_INT], "#,##0":
+		return c.formatToInt("%d")
+	case builtInNumFmt[builtInNumFmtIndex_FLOAT], "#,##0.00":
+		return c.formatToFloat("%.2f")
+	case "#,##0 ;(#,##0)", "#,##0 ;[red](#,##0)":
+		f, err := strconv.ParseFloat(c.Value, 64)
+		if err != nil {
+			return c.Value, err
+		}
+		if f < 0 {
+			i := int(math.Abs(f))
+			return fmt.Sprintf("(%d)", i), nil
+		}
+		i := int(f)
+		return fmt.Sprintf("%d", i), nil
+	case "#,##0.00;(#,##0.00)", "#,##0.00;[red](#,##0.00)":
+		f, err := strconv.ParseFloat(c.Value, 64)
+		if err != nil {
+			return c.Value, err
+		}
+		if f < 0 {
+			return fmt.Sprintf("(%.2f)", f), nil
+		}
+		return fmt.Sprintf("%.2f", f), nil
+	case "0%":
+		f, err := strconv.ParseFloat(c.Value, 64)
+		if err != nil {
+			return c.Value, err
+		}
+		f = f * 100
+		return fmt.Sprintf("%d%%", int(f)), nil
+	case "0.00%":
+		f, err := strconv.ParseFloat(c.Value, 64)
+		if err != nil {
+			return c.Value, err
+		}
+		f = f * 100
+		return fmt.Sprintf("%.2f%%", f), nil
+	case "0.00e+00", "##0.0e+0":
+		return c.formatToFloat("%e")
+	}
+	return c.Value, nil
+
+}
+
+// parseTime returns a string parsed using time.Time
+func parseTime(c *Cell) (string, error) {
+	f, err := strconv.ParseFloat(c.Value, 64)
+	if err != nil {
+		return c.Value, err
+	}
+	val := TimeFromExcelTime(f, c.date1904)
+	format := c.GetNumberFormat()
+
+	// Replace Excel placeholders with Go time placeholders.
+	// For example, replace yyyy with 2006. These are in a specific order,
+	// due to the fact that m is used in month, minute, and am/pm. It would
+	// be easier to fix that with regular expressions, but if it's possible
+	// to keep this simple it would be easier to maintain.
+	// Full-length month and days (e.g. March, Tuesday) have letters in them that would be replaced
+	// by other characters below (such as the 'h' in March, or the 'd' in Tuesday) below.
+	// First we convert them to arbitrary characters unused in Excel Date formats, and then at the end,
+	// turn them to what they should actually be.
+	// Based off: http://www.ozgrid.com/Excel/CustomFormats.htm
+	replacements := []struct{ xltime, gotime string }{
+		{"yyyy", "2006"},
+		{"yy", "06"},
+		{"mmmm", "%%%%"},
+		{"dddd", "&&&&"},
+		{"dd", "02"},
+		{"d", "2"},
+		{"mmm", "Jan"},
+		{"mmss", "0405"},
+		{"ss", "05"},
+		{"mm:", "04:"},
+		{":mm", ":04"},
+		{"mm", "01"},
+		{"am/pm", "pm"},
+		{"m/", "1/"},
+		{"%%%%", "January"},
+		{"&&&&", "Monday"},
+	}
+	// It is the presence of the "am/pm" indicator that determins
+	// if this is a 12 hour or 24 hours time format, not the
+	// number of 'h' characters.
+	if is12HourTime(format) {
+		format = strings.Replace(format, "hh", "03", 1)
+		format = strings.Replace(format, "h", "3", 1)
+	} else {
+		format = strings.Replace(format, "hh", "15", 1)
+		format = strings.Replace(format, "h", "15", 1)
+	}
+	for _, repl := range replacements {
+		format = strings.Replace(format, repl.xltime, repl.gotime, 1)
+	}
+	// If the hour is optional, strip it out, along with the
+	// possible dangling colon that would remain.
+	if val.Hour() < 1 {
+		format = strings.Replace(format, "]:", "]", 1)
+		format = strings.Replace(format, "[03]", "", 1)
+		format = strings.Replace(format, "[3]", "", 1)
+		format = strings.Replace(format, "[15]", "", 1)
+	} else {
+		format = strings.Replace(format, "[3]", "3", 1)
+		format = strings.Replace(format, "[15]", "15", 1)
+	}
+	return val.Format(format), nil
+}
+
+// isTimeFormat checks whether an Excel format string represents
+// a time.Time.
+func isTimeFormat(format string) bool {
+	dateParts := []string{
+		"yy", "hh", "h", "am/pm", "AM/PM", "A/P", "a/p", "ss", "mm", ":",
+	}
+	for _, part := range dateParts {
+		if strings.Contains(format, part) {
+			return true
+		}
+	}
+	return false
+}
+
+// is12HourTime checks whether an Excel time format string is a 12
+// hours form.
+func is12HourTime(format string) bool {
+	return strings.Contains(format, "am/pm") || strings.Contains(format, "AM/PM") || strings.Contains(format, "a/p") || strings.Contains(format, "A/P")
 }

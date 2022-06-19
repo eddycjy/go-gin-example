@@ -10,7 +10,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 )
 
 // File is a high level structure providing a slice of Sheet structs
@@ -26,8 +25,6 @@ type File struct {
 	DefinedNames   []*xlsxDefinedName
 }
 
-const NoRowLimit int = -1
-
 // Create a new File
 func NewFile() *File {
 	return &File{
@@ -39,48 +36,31 @@ func NewFile() *File {
 
 // OpenFile() take the name of an XLSX file and returns a populated
 // xlsx.File struct for it.
-func OpenFile(fileName string) (file *File, err error) {
-	return OpenFileWithRowLimit(fileName, NoRowLimit)
-}
-
-// OpenFileWithRowLimit() will open the file, but will only read the specified number of rows.
-// If you save this file, it will be truncated to the number of rows specified.
-func OpenFileWithRowLimit(fileName string, rowLimit int) (file *File, err error) {
-	var z *zip.ReadCloser
-	z, err = zip.OpenReader(fileName)
+func OpenFile(filename string) (file *File, err error) {
+	var f *zip.ReadCloser
+	f, err = zip.OpenReader(filename)
 	if err != nil {
 		return nil, err
 	}
-	return ReadZipWithRowLimit(z, rowLimit)
+	file, err = ReadZip(f)
+	return
 }
 
 // OpenBinary() take bytes of an XLSX file and returns a populated
 // xlsx.File struct for it.
 func OpenBinary(bs []byte) (*File, error) {
-	return OpenBinaryWithRowLimit(bs, NoRowLimit)
-}
-
-// OpenBinaryWithRowLimit() take bytes of an XLSX file and returns a populated
-// xlsx.File struct for it.
-func OpenBinaryWithRowLimit(bs []byte, rowLimit int) (*File, error) {
 	r := bytes.NewReader(bs)
-	return OpenReaderAtWithRowLimit(r, int64(r.Len()), rowLimit)
+	return OpenReaderAt(r, int64(r.Len()))
 }
 
 // OpenReaderAt() take io.ReaderAt of an XLSX file and returns a populated
 // xlsx.File struct for it.
 func OpenReaderAt(r io.ReaderAt, size int64) (*File, error) {
-	return OpenReaderAtWithRowLimit(r, size, NoRowLimit)
-}
-
-// OpenReaderAtWithRowLimit() take io.ReaderAt of an XLSX file and returns a populated
-// xlsx.File struct for it.
-func OpenReaderAtWithRowLimit(r io.ReaderAt, size int64, rowLimit int) (*File, error) {
 	file, err := zip.NewReader(r, size)
 	if err != nil {
 		return nil, err
 	}
-	return ReadZipReaderWithRowLimit(file, rowLimit)
+	return ReadZipReader(file)
 }
 
 // A convenient wrapper around File.ToSlice, FileToSlice will
@@ -103,18 +83,6 @@ func FileToSlice(path string) ([][][]string, error) {
 		return nil, err
 	}
 	return f.ToSlice()
-}
-
-// FileToSliceUnmerged is a wrapper around File.ToSliceUnmerged.
-// It returns the raw data contained in an Excel XLSX file as three
-// dimensional slice. Merged cells will be unmerged. Covered cells become the
-// values of theirs origins.
-func FileToSliceUnmerged(path string) ([][][]string, error) {
-	f, err := OpenFile(path)
-	if err != nil {
-		return nil, err
-	}
-	return f.ToSliceUnmerged()
 }
 
 // Save the File to an xlsx file at the provided path.
@@ -154,9 +122,6 @@ func (f *File) Write(writer io.Writer) (err error) {
 func (f *File) AddSheet(sheetName string) (*Sheet, error) {
 	if _, exists := f.Sheet[sheetName]; exists {
 		return nil, fmt.Errorf("duplicate sheet name '%s'.", sheetName)
-	}
-	if utf8.RuneCountInString(sheetName) >= 31 {
-		return nil, fmt.Errorf("sheet name must be less than 31 characters long.  It is currently '%d' characters long", utf8.RuneCountInString(sheetName))
 	}
 	sheet := &Sheet{
 		Name:     sheetName,
@@ -337,9 +302,9 @@ func (f *File) MarshallParts() (map[string]string, error) {
 //
 // Here, value would be set to the raw value of the cell A1 in the
 // first sheet in the XLSX file.
-func (f *File) ToSlice() (output [][][]string, err error) {
+func (file *File) ToSlice() (output [][][]string, err error) {
 	output = [][][]string{}
-	for _, sheet := range f.Sheets {
+	for _, sheet := range file.Sheets {
 		s := [][]string{}
 		for _, row := range sheet.Rows {
 			if row == nil {
@@ -363,41 +328,5 @@ func (f *File) ToSlice() (output [][][]string, err error) {
 		}
 		output = append(output, s)
 	}
-	return output, nil
-}
-
-// ToSliceUnmerged returns the raw data contained in the File as three
-// dimensional slice (s. method ToSlice).
-// A covered cell become the value of its origin cell.
-// Example: table where A1:A2 merged.
-// | 01.01.2011 | Bread | 20 |
-// |            | Fish  | 70 |
-// This sheet will be converted to the slice:
-// [  [01.01.2011 Bread 20]
-// 		[01.01.2011 Fish 70] ]
-func (f *File) ToSliceUnmerged() (output [][][]string, err error) {
-	output, err = f.ToSlice()
-	if err != nil {
-		return nil, err
-	}
-
-	for s, sheet := range f.Sheets {
-		for r, row := range sheet.Rows {
-			for c, cell := range row.Cells {
-				if cell.HMerge > 0 {
-					for i := c + 1; i <= c+cell.HMerge; i++ {
-						output[s][r][i] = output[s][r][c]
-					}
-				}
-
-				if cell.VMerge > 0 {
-					for i := r + 1; i <= r+cell.VMerge; i++ {
-						output[s][i][c] = output[s][r][c]
-					}
-				}
-			}
-		}
-	}
-
 	return output, nil
 }

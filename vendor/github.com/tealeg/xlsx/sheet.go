@@ -1,7 +1,6 @@
 package xlsx
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 )
@@ -130,7 +129,7 @@ func (s *Sheet) handleMerged() {
 	for r, row := range s.Rows {
 		for c, cell := range row.Cells {
 			if cell.HMerge > 0 || cell.VMerge > 0 {
-				coord := GetCellIDStringFromCoords(c, r)
+				coord := fmt.Sprintf("%s%d", numericToLetters(c), r+1)
 				merged[coord] = cell
 			}
 		}
@@ -281,47 +280,44 @@ func (s *Sheet) makeXLSXSheet(refTable *RefTable, styles *xlsxStyleSheet) *xlsxW
 			style := cell.style
 			if style != nil {
 				XfId = handleStyleForXLSX(style, xNumFmt.NumFmtId, styles)
-			} else if len(cell.NumFmt) > 0 && !compareFormatString(s.Cols[c].numFmt, cell.NumFmt) {
+			} else if len(cell.NumFmt) > 0 && s.Cols[c].numFmt != cell.NumFmt {
 				XfId = handleNumFmtIdForXLSX(xNumFmt.NumFmtId, styles)
 			}
 
 			if c > maxCell {
 				maxCell = c
 			}
-			xC := xlsxC{
-				S: XfId,
-				R: GetCellIDStringFromCoords(c, r),
-			}
-			if cell.formula != "" {
-				xC.F = &xlsxF{Content: cell.formula}
-			}
+			xC := xlsxC{}
+			xC.R = fmt.Sprintf("%s%d", numericToLetters(c), r+1)
 			switch cell.cellType {
-			case CellTypeInline:
-				// Inline strings are turned into shared strings since they are more efficient.
-				// This is what Excel does as well.
-				fallthrough
 			case CellTypeString:
 				if len(cell.Value) > 0 {
 					xC.V = strconv.Itoa(refTable.AddString(cell.Value))
 				}
 				xC.T = "s"
-			case CellTypeNumeric:
-				// Numeric is the default, so the type can be left blank
-				xC.V = cell.Value
+				xC.S = XfId
 			case CellTypeBool:
 				xC.V = cell.Value
 				xC.T = "b"
-			case CellTypeError:
+				xC.S = XfId
+			case CellTypeNumeric:
 				xC.V = cell.Value
-				xC.T = "e"
+				xC.S = XfId
 			case CellTypeDate:
 				xC.V = cell.Value
-				xC.T = "d"
-			case CellTypeStringFormula:
+				xC.S = XfId
+			case CellTypeFormula:
 				xC.V = cell.Value
-				xC.T = "str"
-			default:
-				panic(errors.New("unknown cell type cannot be marshaled"))
+				xC.F = &xlsxF{Content: cell.formula}
+				xC.S = XfId
+			case CellTypeError:
+				xC.V = cell.Value
+				xC.F = &xlsxF{Content: cell.formula}
+				xC.T = "e"
+				xC.S = XfId
+			case CellTypeGeneral:
+				xC.V = cell.Value
+				xC.S = XfId
 			}
 
 			xRow.C = append(xRow.C, xC)
@@ -329,10 +325,10 @@ func (s *Sheet) makeXLSXSheet(refTable *RefTable, styles *xlsxStyleSheet) *xlsxW
 			if cell.HMerge > 0 || cell.VMerge > 0 {
 				// r == rownum, c == colnum
 				mc := xlsxMergeCell{}
-				start := GetCellIDStringFromCoords(c, r)
-				endCol := c + cell.HMerge
-				endRow := r + cell.VMerge
-				end := GetCellIDStringFromCoords(endCol, endRow)
+				start := fmt.Sprintf("%s%d", numericToLetters(c), r+1)
+				endcol := c + cell.HMerge
+				endrow := r + cell.VMerge + 1
+				end := fmt.Sprintf("%s%d", numericToLetters(endcol), endrow)
 				mc.Ref = start + ":" + end
 				if worksheet.MergeCells == nil {
 					worksheet.MergeCells = &xlsxMergeCells{}
@@ -360,7 +356,8 @@ func (s *Sheet) makeXLSXSheet(refTable *RefTable, styles *xlsxStyleSheet) *xlsxW
 
 	worksheet.SheetData = xSheet
 	dimension := xlsxDimension{}
-	dimension.Ref = "A1:" + GetCellIDStringFromCoords(maxCell, maxRow)
+	dimension.Ref = fmt.Sprintf("A1:%s%d",
+		numericToLetters(maxCell), maxRow+1)
 	if dimension.Ref == "A1:A1" {
 		dimension.Ref = "A1"
 	}

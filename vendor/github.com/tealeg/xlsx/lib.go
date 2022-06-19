@@ -2,7 +2,6 @@ package xlsx
 
 import (
 	"archive/zip"
-	"bytes"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -10,10 +9,6 @@ import (
 	"path"
 	"strconv"
 	"strings"
-)
-
-const (
-	sheetEnding = `</sheetData></worksheet>`
 )
 
 // XLSXReaderError is the standard error type for otherwise undefined
@@ -30,7 +25,7 @@ func (e *XLSXReaderError) Error() string {
 
 // getRangeFromString is an internal helper function that converts
 // XLSX internal range syntax to a pair of integers.  For example,
-// the range string "1:3" yield the upper and lower integers 1 and 3.
+// the range string "1:3" yield the upper and lower intergers 1 and 3.
 func getRangeFromString(rangeString string) (lower int, upper int, error error) {
 	var parts []string
 	parts = strings.SplitN(rangeString, ":", 2)
@@ -51,9 +46,9 @@ func getRangeFromString(rangeString string) (lower int, upper int, error error) 
 	return lower, upper, error
 }
 
-// ColLettersToIndex is used to convert a character based column
+// lettersToNumeric is used to convert a character based column
 // reference to a zero based numeric column identifier.
-func ColLettersToIndex(letters string) int {
+func lettersToNumeric(letters string) int {
 	sum, mul, n := 0, 1, 0
 	for i := len(letters) - 1; i >= 0; i, mul, n = i-1, mul*26, 1 {
 		c := letters[i]
@@ -139,9 +134,9 @@ func intToBase26(x int) (parts []int) {
 	return parts
 }
 
-// ColIndexToLetters is used to convert a zero based, numeric column
+// numericToLetters is used to convert a zero based, numeric column
 // indentifier into a character code.
-func ColIndexToLetters(colRef int) string {
+func numericToLetters(colRef int) string {
 	parts := intToBase26(colRef)
 	return formatColumnName(smooshBase26Slice(parts))
 }
@@ -177,14 +172,14 @@ func GetCoordsFromCellIDString(cellIDString string) (x, y int, error error) {
 		return x, y, error
 	}
 	y -= 1 // Zero based
-	x = ColLettersToIndex(letterPart)
+	x = lettersToNumeric(letterPart)
 	return x, y, error
 }
 
 // GetCellIDStringFromCoords returns the Excel format cell name that
 // represents a pair of zero based cartesian coordinates.
 func GetCellIDStringFromCoords(x, y int) string {
-	letterPart := ColIndexToLetters(x)
+	letterPart := numericToLetters(x)
 	numericPart := y + 1
 	return fmt.Sprintf("%s%d", letterPart, numericPart)
 }
@@ -200,6 +195,10 @@ func getMaxMinFromDimensionRef(ref string) (minx, miny, maxx, maxy int, err erro
 	if err != nil {
 		return -1, -1, -1, -1, err
 	}
+	if len(parts) == 1 {
+		maxx, maxy = minx, miny
+		return
+	}
 	maxx, maxy, err = GetCoordsFromCellIDString(parts[1])
 	if err != nil {
 		return -1, -1, -1, -1, err
@@ -210,7 +209,6 @@ func getMaxMinFromDimensionRef(ref string) (minx, miny, maxx, maxy int, err erro
 // calculateMaxMinFromWorkSheet works out the dimensions of a spreadsheet
 // that doesn't have a DimensionRef set.  The only case currently
 // known where this is true is with XLSX exported from Google Docs.
-// This is also true for XLSX files created through the streaming APIs.
 func calculateMaxMinFromWorksheet(worksheet *xlsxWorksheet) (minx, miny, maxx, maxy int, err error) {
 	// Note, this method could be very slow for large spreadsheets.
 	var x, y int
@@ -443,56 +441,53 @@ func shiftCell(cellID string, dx, dy int) string {
 // fillCellData attempts to extract a valid value, usable in
 // CSV form from the raw cell value.  Note - this is not actually
 // general enough - we should support retaining tabs and newlines.
-func fillCellData(rawCell xlsxC, refTable *RefTable, sharedFormulas map[int]sharedFormula, cell *Cell) {
-	val := strings.Trim(rawCell.V, " \t\n\r")
-	cell.formula = formulaForCell(rawCell, sharedFormulas)
-	switch rawCell.T {
-	case "s": // Shared String
-		cell.cellType = CellTypeString
-		if val != "" {
-			ref, err := strconv.Atoi(val)
-			if err != nil {
-				panic(err)
+func fillCellData(rawcell xlsxC, reftable *RefTable, sharedFormulas map[int]sharedFormula, cell *Cell) {
+	var data = rawcell.V
+	if len(data) > 0 {
+		vval := strings.Trim(data, " \t\n\r")
+		switch rawcell.T {
+		case "s": // Shared String
+			ref, error := strconv.Atoi(vval)
+			if error != nil {
+				panic(error)
 			}
-			cell.Value = refTable.ResolveSharedString(ref)
+			cell.Value = reftable.ResolveSharedString(ref)
+			cell.cellType = CellTypeString
+		case "b": // Boolean
+			cell.Value = vval
+			cell.cellType = CellTypeBool
+		case "e": // Error
+			cell.Value = vval
+			cell.formula = formulaForCell(rawcell, sharedFormulas)
+			cell.cellType = CellTypeError
+		default:
+			if rawcell.F == nil {
+				// Numeric
+				cell.Value = vval
+				cell.cellType = CellTypeNumeric
+			} else {
+				// Formula
+				cell.Value = vval
+				cell.formula = formulaForCell(rawcell, sharedFormulas)
+				cell.cellType = CellTypeFormula
+			}
 		}
-	case "inlineStr":
-		cell.cellType = CellTypeInline
-		fillCellDataFromInlineString(rawCell, cell)
-	case "b": // Boolean
-		cell.Value = val
-		cell.cellType = CellTypeBool
-	case "e": // Error
-		cell.Value = val
-		cell.cellType = CellTypeError
-	case "str":
-		// String Formula (special type for cells with formulas that return a string value)
-		// Unlike the other string cell types, the string is stored directly in the value.
-		cell.Value = val
-		cell.cellType = CellTypeStringFormula
-	case "d": // Date: Cell contains a date in the ISO 8601 format.
-		cell.Value = val
-		cell.cellType = CellTypeDate
-	case "": // Numeric is the default
-		fallthrough
-	case "n": // Numeric
-		cell.Value = val
-		cell.cellType = CellTypeNumeric
-	default:
-		panic(errors.New("invalid cell type"))
+	} else {
+		if rawcell.Is != nil {
+			fillCellDataFromInlineString(rawcell, cell)
+		}
 	}
 }
 
 // fillCellDataFromInlineString attempts to get inline string data and put it into a Cell.
 func fillCellDataFromInlineString(rawcell xlsxC, cell *Cell) {
-	cell.Value = ""
-	if rawcell.Is != nil {
-		if rawcell.Is.T != "" {
-			cell.Value = strings.Trim(rawcell.Is.T, " \t\n\r")
-		} else {
-			for _, r := range rawcell.Is.R {
-				cell.Value += r.T
-			}
+	if rawcell.Is.T != "" {
+		cell.Value = strings.Trim(rawcell.Is.T, " \t\n\r")
+		cell.cellType = CellTypeInline
+	} else {
+		cell.Value = ""
+		for _, r := range rawcell.Is.R {
+			cell.Value += r.T
 		}
 	}
 }
@@ -501,11 +496,11 @@ func fillCellDataFromInlineString(rawcell xlsxC, cell *Cell) {
 // rows from a XSLXWorksheet, populates them with Cells and resolves
 // the value references from the reference table and stores them in
 // the rows and columns.
-func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet, rowLimit int) ([]*Row, []*Col, int, int) {
+func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet) ([]*Row, []*Col, int, int) {
 	var rows []*Row
 	var cols []*Col
 	var row *Row
-	var minCol, maxCol, maxRow, colCount, rowCount int
+	var minCol, maxCol, minRow, maxRow, colCount, rowCount int
 	var reftable *RefTable
 	var err error
 	var insertRowIndex, insertColIndex int
@@ -515,10 +510,10 @@ func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet, rowLi
 		return nil, nil, 0, 0
 	}
 	reftable = file.referenceTable
-	if len(Worksheet.Dimension.Ref) > 0 && len(strings.Split(Worksheet.Dimension.Ref, ":")) == 2 && rowLimit == NoRowLimit {
-		minCol, _, maxCol, maxRow, err = getMaxMinFromDimensionRef(Worksheet.Dimension.Ref)
+	if len(Worksheet.Dimension.Ref) > 0 {
+		minCol, minRow, maxCol, maxRow, err = getMaxMinFromDimensionRef(Worksheet.Dimension.Ref)
 	} else {
-		minCol, _, maxCol, maxRow, err = calculateMaxMinFromWorksheet(Worksheet)
+		minCol, minRow, maxCol, maxRow, err = calculateMaxMinFromWorksheet(Worksheet)
 	}
 	if err != nil {
 		panic(err.Error())
@@ -528,6 +523,7 @@ func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet, rowLi
 	colCount = maxCol + 1
 	rows = make([]*Row, rowCount)
 	cols = make([]*Col, colCount)
+	insertRowIndex = minRow
 	for i := range cols {
 		cols[i] = &Col{
 			Hidden: false,
@@ -552,10 +548,15 @@ func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet, rowLi
 				cols[i-1] = col
 				if file.styles != nil {
 					col.style = file.styles.getStyle(rawcol.Style)
-					col.numFmt, col.parsedNumFmt = file.styles.getNumberFormat(rawcol.Style)
+					col.numFmt = file.styles.getNumberFormat(rawcol.Style)
 				}
 			}
 		}
+	}
+
+	// insert leading empty rows that is in front of minRow
+	for rowIndex := 0; rowIndex < minRow; rowIndex++ {
+		rows[rowIndex] = makeEmptyRow(sheet)
 	}
 
 	numRows := len(rows)
@@ -614,7 +615,7 @@ func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet, rowLi
 				fillCellData(rawcell, reftable, sharedFormulas, cell)
 				if file.styles != nil {
 					cell.style = file.styles.getStyle(rawcell.S)
-					cell.NumFmt, cell.parsedNumFmt = file.styles.getNumberFormat(rawcell.S)
+					cell.NumFmt = file.styles.getNumberFormat(rawcell.S)
 				}
 				cell.date1904 = file.Date1904
 				// Cell is considered hidden if the row or the column of this cell is hidden
@@ -626,11 +627,6 @@ func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet, rowLi
 			rows[insertRowIndex] = row
 		}
 		insertRowIndex++
-	}
-
-	// insert trailing empty rows for the rest of the file
-	for ; insertRowIndex < rowCount; insertRowIndex++ {
-		rows[insertRowIndex] = makeEmptyRow(sheet)
 	}
 	return rows, cols, colCount, rowCount
 }
@@ -667,10 +663,11 @@ func readSheetViews(xSheetViews xlsxSheetViews) []SheetView {
 // into a Sheet struct.  This work can be done in parallel and so
 // readSheetsFromZipFile will spawn an instance of this function per
 // sheet and get the results back on the provided channel.
-func readSheetFromFile(sc chan *indexedSheet, index int, rsheet xlsxSheet, fi *File, sheetXMLMap map[string]string, rowLimit int) (errRes error) {
+func readSheetFromFile(sc chan *indexedSheet, index int, rsheet xlsxSheet, fi *File, sheetXMLMap map[string]string) (errRes error) {
 	result := &indexedSheet{Index: index, Sheet: nil, Error: nil}
 	defer func() {
 		if e := recover(); e != nil {
+
 			switch e.(type) {
 			case error:
 				result.Error = e.(error)
@@ -683,15 +680,15 @@ func readSheetFromFile(sc chan *indexedSheet, index int, rsheet xlsxSheet, fi *F
 		}
 	}()
 
-	worksheet, err := getWorksheetFromSheet(rsheet, fi.worksheets, sheetXMLMap, rowLimit)
-	if err != nil {
-		result.Error = err
+	worksheet, error := getWorksheetFromSheet(rsheet, fi.worksheets, sheetXMLMap)
+	if error != nil {
+		result.Error = error
 		sc <- result
-		return err
+		return error
 	}
 	sheet := new(Sheet)
 	sheet.File = fi
-	sheet.Rows, sheet.Cols, sheet.MaxCol, sheet.MaxRow = readRowsFromSheet(worksheet, fi, sheet, rowLimit)
+	sheet.Rows, sheet.Cols, sheet.MaxCol, sheet.MaxRow = readRowsFromSheet(worksheet, fi, sheet)
 	sheet.Hidden = rsheet.State == sheetStateHidden || rsheet.State == sheetStateVeryHidden
 	sheet.SheetViews = readSheetViews(worksheet.SheetViews)
 
@@ -708,7 +705,7 @@ func readSheetFromFile(sc chan *indexedSheet, index int, rsheet xlsxSheet, fi *F
 // readSheetsFromZipFile is an internal helper function that loops
 // over the Worksheets defined in the XSLXWorkbook and loads them into
 // Sheet objects stored in the Sheets slice of a xlsx.File struct.
-func readSheetsFromZipFile(f *zip.File, file *File, sheetXMLMap map[string]string, rowLimit int) (map[string]*Sheet, []*Sheet, error) {
+func readSheetsFromZipFile(f *zip.File, file *File, sheetXMLMap map[string]string) (map[string]*Sheet, []*Sheet, error) {
 	var workbook *xlsxWorkbook
 	var err error
 	var rc io.ReadCloser
@@ -747,7 +744,7 @@ func readSheetsFromZipFile(f *zip.File, file *File, sheetXMLMap map[string]strin
 		defer close(sheetChan)
 		err = nil
 		for i, rawsheet := range workbookSheets {
-			if err := readSheetFromFile(sheetChan, i, rawsheet, file, sheetXMLMap, rowLimit); err != nil {
+			if err := readSheetFromFile(sheetChan, i, rawsheet, file, sheetXMLMap); err != nil {
 				return
 			}
 		}
@@ -916,28 +913,13 @@ func readWorkbookRelationsFromZipFile(workbookRels *zip.File) (WorkBookRels, err
 // xlsx.File struct populated with its contents.  In most cases
 // ReadZip is not used directly, but is called internally by OpenFile.
 func ReadZip(f *zip.ReadCloser) (*File, error) {
-	return ReadZipWithRowLimit(f, NoRowLimit)
-}
-
-// ReadZipWithRowLimit() takes a pointer to a zip.ReadCloser and returns a
-// xlsx.File struct populated with its contents.  In most cases
-// ReadZip is not used directly, but is called internally by OpenFile.
-func ReadZipWithRowLimit(f *zip.ReadCloser, rowLimit int) (*File, error) {
 	defer f.Close()
-	return ReadZipReaderWithRowLimit(&f.Reader, rowLimit)
+	return ReadZipReader(&f.Reader)
 }
 
 // ReadZipReader() can be used to read an XLSX in memory without
 // touching the filesystem.
 func ReadZipReader(r *zip.Reader) (*File, error) {
-	return ReadZipReaderWithRowLimit(r, NoRowLimit)
-}
-
-// ReadZipReaderWithRowLimit() can be used to read an XLSX in memory without
-// touching the filesystem.
-// rowLimit is the number of rows that should be read from the file. If rowLimit is -1, no limit is applied.
-// You can specify this with the constant NoRowLimit.
-func ReadZipReaderWithRowLimit(r *zip.Reader, rowLimit int) (*File, error) {
 	var err error
 	var file *File
 	var reftable *RefTable
@@ -969,7 +951,7 @@ func ReadZipReaderWithRowLimit(r *zip.Reader, rowLimit int) (*File, error) {
 		case "xl/theme/theme1.xml":
 			themeFile = v
 		default:
-			if len(v.Name) > 17 {
+			if len(v.Name) > 14 {
 				if v.Name[0:13] == "xl/worksheets" {
 					worksheets[v.Name[14:len(v.Name)-4]] = v
 				}
@@ -1008,7 +990,7 @@ func ReadZipReaderWithRowLimit(r *zip.Reader, rowLimit int) (*File, error) {
 
 		file.styles = style
 	}
-	sheetsByName, sheets, err = readSheetsFromZipFile(workbook, file, sheetXMLMap, rowLimit)
+	sheetsByName, sheets, err = readSheetsFromZipFile(workbook, file, sheetXMLMap)
 	if err != nil {
 		return nil, err
 	}
@@ -1020,46 +1002,4 @@ func ReadZipReaderWithRowLimit(r *zip.Reader, rowLimit int) (*File, error) {
 	file.Sheet = sheetsByName
 	file.Sheets = sheets
 	return file, nil
-}
-
-// truncateSheetXML will take in a reader to an XML sheet file and will return a reader that will read an equivalent
-// XML sheet file with only the number of rows specified. This greatly speeds up XML unmarshalling when only
-// a few rows need to be read from a large sheet.
-// When sheets are truncated, all formatting present after the sheetData tag will be lost, but all of this formatting
-// is related to printing and visibility, and is out of scope for most purposes of this library.
-func truncateSheetXML(r io.Reader, rowLimit int) (io.Reader, error) {
-	var rowCount int
-	var token xml.Token
-	var readErr error
-
-	output := new(bytes.Buffer)
-	r = io.TeeReader(r, output)
-	decoder := xml.NewDecoder(r)
-
-	for {
-		token, readErr = decoder.Token()
-		if readErr == io.EOF {
-			break
-		} else if readErr != nil {
-			return nil, readErr
-		}
-		end, ok := token.(xml.EndElement)
-		if ok && end.Name.Local == "row" {
-			rowCount++
-			if rowCount >= rowLimit {
-				break
-			}
-		}
-	}
-
-	offset := decoder.InputOffset()
-	output.Truncate(int(offset))
-
-	if readErr != io.EOF {
-		_, err := output.Write([]byte(sheetEnding))
-		if err != nil {
-			return nil, err
-		}
-	}
-	return output, nil
 }

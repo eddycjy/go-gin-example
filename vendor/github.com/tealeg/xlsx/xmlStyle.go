@@ -12,6 +12,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -57,19 +58,6 @@ var builtInNumFmt = map[int]string{
 	49: "@",
 }
 
-// These are the color annotations from number format codes that contain color names.
-// Also possible are [color1] through [color56]
-var numFmtColorCodes = []string{
-	"[red]",
-	"[black]",
-	"[green]",
-	"[white]",
-	"[blue]",
-	"[magenta]",
-	"[yellow]",
-	"[cyan]",
-}
-
 var builtInNumFmtInv = make(map[string]int, 40)
 
 func init() {
@@ -103,10 +91,9 @@ type xlsxStyleSheet struct {
 
 	theme *theme
 
-	sync.RWMutex      // protects the following
-	styleCache        map[int]*Style
-	numFmtRefTable    map[int]xlsxNumFmt
-	parsedNumFmtTable map[string]*parsedNumberFormat
+	sync.RWMutex   // protects the following
+	styleCache     map[int]*Style
+	numFmtRefTable map[int]xlsxNumFmt
 }
 
 func newXlsxStyleSheet(t *theme) *xlsxStyleSheet {
@@ -211,9 +198,8 @@ func (styles *xlsxStyleSheet) getStyle(styleIndex int) *Style {
 			style.Alignment.Vertical = xf.Alignment.Vertical
 		}
 		style.Alignment.WrapText = xf.Alignment.WrapText
-        	style.Alignment.TextRotation = xf.Alignment.TextRotation
-		
-        	styles.Lock()
+
+		styles.Lock()
 		styles.styleCache[styleIndex] = style
 		styles.Unlock()
 	}
@@ -234,30 +220,22 @@ func getBuiltinNumberFormat(numFmtId int) string {
 	return builtInNumFmt[numFmtId]
 }
 
-func (styles *xlsxStyleSheet) getNumberFormat(styleIndex int) (string, *parsedNumberFormat) {
-	var numberFormat string = "general"
-	if styles.CellXfs.Xf != nil {
-		if styleIndex > -1 && styleIndex <= styles.CellXfs.Count {
-			xf := styles.CellXfs.Xf[styleIndex]
-			if builtin := getBuiltinNumberFormat(xf.NumFmtId); builtin != "" {
-				numberFormat = builtin
-			} else {
-				if styles.numFmtRefTable != nil {
-					numFmt := styles.numFmtRefTable[xf.NumFmtId]
-					numberFormat = numFmt.FormatCode
-				}
-			}
+func (styles *xlsxStyleSheet) getNumberFormat(styleIndex int) string {
+	if styles.CellXfs.Xf == nil {
+		return ""
+	}
+	var numberFormat string = ""
+	if styleIndex > -1 && styleIndex <= styles.CellXfs.Count {
+		xf := styles.CellXfs.Xf[styleIndex]
+		if builtin := getBuiltinNumberFormat(xf.NumFmtId); builtin != "" {
+			return builtin
+		}
+		if styles.numFmtRefTable != nil {
+			numFmt := styles.numFmtRefTable[xf.NumFmtId]
+			numberFormat = numFmt.FormatCode
 		}
 	}
-	parsedFmt, ok := styles.parsedNumFmtTable[numberFormat]
-	if !ok {
-		if styles.parsedNumFmtTable == nil {
-			styles.parsedNumFmtTable = map[string]*parsedNumberFormat{}
-		}
-		parsedFmt = parseFullNumberFormatString(numberFormat)
-		styles.parsedNumFmtTable[numberFormat] = parsedFmt
-	}
-	return numberFormat, parsedFmt
+	return strings.ToLower(numberFormat)
 }
 
 func (styles *xlsxStyleSheet) addFont(xFont xlsxFont) (index int) {
@@ -335,7 +313,7 @@ func (styles *xlsxStyleSheet) addCellXf(xCellXf xlsxXf) (index int) {
 
 // newNumFmt generate a xlsxNumFmt according the format code. When the FormatCode is built in, it will return a xlsxNumFmt with the NumFmtId defined in ECMA document, otherwise it will generate a new NumFmtId greater than 164.
 func (styles *xlsxStyleSheet) newNumFmt(formatCode string) xlsxNumFmt {
-	if compareFormatString(formatCode, "general") {
+	if formatCode == "" {
 		return xlsxNumFmt{NumFmtId: 0, FormatCode: "general"}
 	}
 	// built in NumFmts in xmlStyle.go, traverse from the const.
