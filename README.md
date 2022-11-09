@@ -9,6 +9,8 @@ An example of gin contains many useful features
 $ go get github.com/EDDYCJY/go-gin-example
 ```
 
+Hello
+
 ## How to run
 
 ### Required
