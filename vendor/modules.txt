@@ -17,9 +17,10 @@ github.com/boombuler/barcode/utils
 github.com/dgrijalva/jwt-go
 # github.com/gin-contrib/sse v0.1.0
 github.com/gin-contrib/sse
-# github.com/gin-gonic/gin v1.4.0
+# github.com/gin-gonic/gin v1.7.0
 github.com/gin-gonic/gin
 github.com/gin-gonic/gin/binding
+github.com/gin-gonic/gin/internal/bytesconv
 github.com/gin-gonic/gin/internal/json
 github.com/gin-gonic/gin/render
 # github.com/go-ini/ini v1.32.1-0.20180214101753-32e4be5f41bb
@@ -32,13 +33,20 @@ github.com/go-openapi/jsonreference
 github.com/go-openapi/spec
 # github.com/go-openapi/swag v0.17.0
 github.com/go-openapi/swag
+# github.com/go-playground/locales v0.13.0
+github.com/go-playground/locales
+github.com/go-playground/locales/currency
+# github.com/go-playground/universal-translator v0.17.0
+github.com/go-playground/universal-translator
+# github.com/go-playground/validator/v10 v10.4.1
+github.com/go-playground/validator/v10
 # github.com/go-sql-driver/mysql v1.4.1-0.20190510102335-877a9775f068
 github.com/go-sql-driver/mysql
 # github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 github.com/golang/freetype
 github.com/golang/freetype/raster
 github.com/golang/freetype/truetype
-# github.com/golang/protobuf v1.3.1
+# github.com/golang/protobuf v1.3.3
 github.com/golang/protobuf/proto
 # github.com/gomodule/redigo v2.0.1-0.20180401191855-9352ab68be13+incompatible
 github.com/gomodule/redigo/internal
@@ -48,13 +56,15 @@ github.com/jinzhu/gorm
 github.com/jinzhu/gorm/dialects/mysql
 # github.com/jinzhu/inflection v0.0.0-20170102125226-1c35d901db3d
 github.com/jinzhu/inflection
-# github.com/json-iterator/go v1.1.7
+# github.com/json-iterator/go v1.1.9
 github.com/json-iterator/go
+# github.com/leodido/go-urn v1.2.0
+github.com/leodido/go-urn
 # github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329
 github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
-# github.com/mattn/go-isatty v0.0.8
+# github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent
@@ -69,10 +79,12 @@ github.com/swaggo/gin-swagger/swaggerFiles
 github.com/swaggo/swag
 # github.com/tealeg/xlsx v1.0.4-0.20180419195153-f36fa3be8893
 github.com/tealeg/xlsx
-# github.com/ugorji/go/codec v1.1.5-pre
+# github.com/ugorji/go/codec v1.1.7
 github.com/ugorji/go/codec
 # github.com/unknwon/com v1.0.1
 github.com/unknwon/com
+# golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+golang.org/x/crypto/sha3
 # golang.org/x/image v0.0.0-20180628062038-cc896f830ced
 golang.org/x/image/font
 golang.org/x/image/math/fixed
@@ -81,7 +93,8 @@ golang.org/x/net/context
 golang.org/x/net/idna
 golang.org/x/net/webdav
 golang.org/x/net/webdav/internal/xml
-# golang.org/x/sys v0.0.0-20190921204832-2dccfee4fd3e
+# golang.org/x/sys v0.0.0-20200116001909-b77594299b42
+golang.org/x/sys/cpu
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/secure/bidirule
@@ -96,7 +109,5 @@ golang.org/x/tools/go/internal/cgo
 golang.org/x/tools/go/loader
 # google.golang.org/appengine v1.6.3
 google.golang.org/appengine/cloudsql
-# gopkg.in/go-playground/validator.v8 v8.18.2
-gopkg.in/go-playground/validator.v8
-# gopkg.in/yaml.v2 v2.2.2
+# gopkg.in/yaml.v2 v2.2.8
 gopkg.in/yaml.v2

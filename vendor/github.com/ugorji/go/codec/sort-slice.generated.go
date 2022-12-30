@@ -17,52 +17,12 @@ func (p stringSlice) Less(i, j int) bool {
 	return p[uint(i)] < p[uint(j)]
 }
 
-type float32Slice []float32
-
-func (p float32Slice) Len() int      { return len(p) }
-func (p float32Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p float32Slice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)] || isNaN32(p[uint(i)]) && !isNaN32(p[uint(j)])
-}
-
 type float64Slice []float64
 
 func (p float64Slice) Len() int      { return len(p) }
 func (p float64Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
 func (p float64Slice) Less(i, j int) bool {
 	return p[uint(i)] < p[uint(j)] || isNaN64(p[uint(i)]) && !isNaN64(p[uint(j)])
-}
-
-type uintSlice []uint
-
-func (p uintSlice) Len() int      { return len(p) }
-func (p uintSlice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p uintSlice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
-}
-
-type uint8Slice []uint8
-
-func (p uint8Slice) Len() int      { return len(p) }
-func (p uint8Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p uint8Slice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
-}
-
-type uint16Slice []uint16
-
-func (p uint16Slice) Len() int      { return len(p) }
-func (p uint16Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p uint16Slice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
-}
-
-type uint32Slice []uint32
-
-func (p uint32Slice) Len() int      { return len(p) }
-func (p uint32Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p uint32Slice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
 }
 
 type uint64Slice []uint64
@@ -78,38 +38,6 @@ type uintptrSlice []uintptr
 func (p uintptrSlice) Len() int      { return len(p) }
 func (p uintptrSlice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
 func (p uintptrSlice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
-}
-
-type intSlice []int
-
-func (p intSlice) Len() int      { return len(p) }
-func (p intSlice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p intSlice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
-}
-
-type int8Slice []int8
-
-func (p int8Slice) Len() int      { return len(p) }
-func (p int8Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p int8Slice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
-}
-
-type int16Slice []int16
-
-func (p int16Slice) Len() int      { return len(p) }
-func (p int16Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p int16Slice) Less(i, j int) bool {
-	return p[uint(i)] < p[uint(j)]
-}
-
-type int32Slice []int32
-
-func (p int32Slice) Len() int      { return len(p) }
-func (p int32Slice) Swap(i, j int) { p[uint(i)], p[uint(j)] = p[uint(j)], p[uint(i)] }
-func (p int32Slice) Less(i, j int) bool {
 	return p[uint(i)] < p[uint(j)]
 }
 
