@@ -29,7 +29,7 @@ require (
 	github.com/tealeg/xlsx v1.0.4-0.20180419195153-f36fa3be8893
 	github.com/unknwon/com v1.0.1
 	golang.org/x/image v0.0.0-20180628062038-cc896f830ced // indirect
-	golang.org/x/sys v0.0.0-20190921204832-2dccfee4fd3e // indirect
+	golang.org/x/sys v0.1.0 // indirect
 	google.golang.org/appengine v1.6.3 // indirect
 	gopkg.in/ini.v1 v1.47.0 // indirect
 )
