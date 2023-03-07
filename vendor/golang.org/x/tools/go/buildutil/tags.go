@@ -1,3 +1,7 @@
+// Copyright 2015 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package buildutil
 
 // This logic was copied from stringsFlag from $GOROOT/src/cmd/go/build.go.
@@ -16,7 +20,8 @@ const TagsFlagDoc = "a list of `build tags` to consider satisfied during the bui
 // See $GOROOT/src/cmd/go/doc.go for description of 'go build -tags' flag.
 //
 // Example:
-// 	flag.Var((*buildutil.TagsFlag)(&build.Default.BuildTags), "tags", buildutil.TagsFlagDoc)
+//
+//	flag.Var((*buildutil.TagsFlag)(&build.Default.BuildTags), "tags", buildutil.TagsFlagDoc)
 type TagsFlag []string
 
 func (v *TagsFlag) Set(s string) error {
