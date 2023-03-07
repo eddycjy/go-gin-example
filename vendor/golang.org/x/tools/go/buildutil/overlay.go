@@ -60,12 +60,11 @@ func OverlayContext(orig *build.Context, overlay map[string][]byte) *build.Conte
 // ParseOverlayArchive parses an archive containing Go files and their
 // contents. The result is intended to be used with OverlayContext.
 //
-//
-// Archive format
+// # Archive format
 //
 // The archive consists of a series of files. Each file consists of a
 // name, a decimal file size and the file contents, separated by
-// newlinews. No newline follows after the file contents.
+// newlines. No newline follows after the file contents.
 func ParseOverlayArchive(archive io.Reader) (map[string][]byte, error) {
 	overlay := make(map[string][]byte)
 	r := bufio.NewReader(archive)
