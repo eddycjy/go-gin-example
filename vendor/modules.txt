@@ -7,7 +7,8 @@ github.com/PuerkitoBio/urlesc
 # github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 github.com/alecthomas/template
 github.com/alecthomas/template/parse
-# github.com/astaxie/beego v1.9.3-0.20171218111859-f16688817aa4
+# github.com/astaxie/beego v1.12.2
+github.com/astaxie/beego/logs
 github.com/astaxie/beego/validation
 # github.com/boombuler/barcode v1.0.1-0.20180315051053-3c06908149f7
 github.com/boombuler/barcode
@@ -32,13 +33,13 @@ github.com/go-openapi/jsonreference
 github.com/go-openapi/spec
 # github.com/go-openapi/swag v0.17.0
 github.com/go-openapi/swag
-# github.com/go-sql-driver/mysql v1.4.1-0.20190510102335-877a9775f068
+# github.com/go-sql-driver/mysql v1.5.0
 github.com/go-sql-driver/mysql
 # github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 github.com/golang/freetype
 github.com/golang/freetype/raster
 github.com/golang/freetype/truetype
-# github.com/golang/protobuf v1.3.1
+# github.com/golang/protobuf v1.4.2
 github.com/golang/protobuf/proto
 # github.com/gomodule/redigo v2.0.1-0.20180401191855-9352ab68be13+incompatible
 github.com/gomodule/redigo/internal
@@ -48,7 +49,7 @@ github.com/jinzhu/gorm
 github.com/jinzhu/gorm/dialects/mysql
 # github.com/jinzhu/inflection v0.0.0-20170102125226-1c35d901db3d
 github.com/jinzhu/inflection
-# github.com/json-iterator/go v1.1.7
+# github.com/json-iterator/go v1.1.10
 github.com/json-iterator/go
 # github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329
 github.com/mailru/easyjson/buffer
@@ -62,6 +63,8 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
+# github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644
+github.com/shiena/ansicolor
 # github.com/swaggo/gin-swagger v1.2.0
 github.com/swaggo/gin-swagger
 github.com/swaggo/gin-swagger/swaggerFiles
@@ -76,12 +79,13 @@ github.com/unknwon/com
 # golang.org/x/image v0.0.0-20180628062038-cc896f830ced
 golang.org/x/image/font
 golang.org/x/image/math/fixed
-# golang.org/x/net v0.0.0-20190611141213-3f473d35a33a
+# golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 golang.org/x/net/context
 golang.org/x/net/idna
 golang.org/x/net/webdav
 golang.org/x/net/webdav/internal/xml
-# golang.org/x/sys v0.0.0-20190921204832-2dccfee4fd3e
+# golang.org/x/sys v0.0.0-20200615200032-f1bc736245b1
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/secure/bidirule
@@ -89,14 +93,40 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/tools v0.0.0-20190611222205-d73e1c7e250b
+# golang.org/x/tools v0.0.0-20200117065230-39095c1d176c
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/buildutil
 golang.org/x/tools/go/internal/cgo
 golang.org/x/tools/go/loader
-# google.golang.org/appengine v1.6.3
-google.golang.org/appengine/cloudsql
+# google.golang.org/protobuf v1.23.0
+google.golang.org/protobuf/encoding/prototext
+google.golang.org/protobuf/encoding/protowire
+google.golang.org/protobuf/internal/descfmt
+google.golang.org/protobuf/internal/descopts
+google.golang.org/protobuf/internal/detrand
+google.golang.org/protobuf/internal/encoding/defval
+google.golang.org/protobuf/internal/encoding/messageset
+google.golang.org/protobuf/internal/encoding/tag
+google.golang.org/protobuf/internal/encoding/text
+google.golang.org/protobuf/internal/errors
+google.golang.org/protobuf/internal/fieldnum
+google.golang.org/protobuf/internal/fieldsort
+google.golang.org/protobuf/internal/filedesc
+google.golang.org/protobuf/internal/filetype
+google.golang.org/protobuf/internal/flags
+google.golang.org/protobuf/internal/genname
+google.golang.org/protobuf/internal/impl
+google.golang.org/protobuf/internal/mapsort
+google.golang.org/protobuf/internal/pragma
+google.golang.org/protobuf/internal/set
+google.golang.org/protobuf/internal/strs
+google.golang.org/protobuf/internal/version
+google.golang.org/protobuf/proto
+google.golang.org/protobuf/reflect/protoreflect
+google.golang.org/protobuf/reflect/protoregistry
+google.golang.org/protobuf/runtime/protoiface
+google.golang.org/protobuf/runtime/protoimpl
 # gopkg.in/go-playground/validator.v8 v8.18.2
 gopkg.in/go-playground/validator.v8
-# gopkg.in/yaml.v2 v2.2.2
+# gopkg.in/yaml.v2 v2.2.8
 gopkg.in/yaml.v2
