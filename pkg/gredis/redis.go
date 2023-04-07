@@ -88,7 +88,7 @@ func Get(key string) ([]byte, error) {
 	return reply, nil
 }
 
-// Delete delete a kye
+// Delete delete a key
 func Delete(key string) (bool, error) {
 	conn := RedisConn.Get()
 	defer conn.Close()
