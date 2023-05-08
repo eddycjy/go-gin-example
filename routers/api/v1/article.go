@@ -3,10 +3,10 @@ package v1
 import (
 	"net/http"
 
-	"github.com/unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/boombuler/barcode/qr"
 	"github.com/gin-gonic/gin"
+	"github.com/unknwon/com"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/app"
 	"github.com/EDDYCJY/go-gin-example/pkg/e"
@@ -17,6 +17,7 @@ import (
 	"github.com/EDDYCJY/go-gin-example/service/tag_service"
 )
 
+// GetArticle
 // @Summary Get a single article
 // @Produce  json
 // @Param id path int true "ID"
@@ -55,6 +56,7 @@ func GetArticle(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, article)
 }
 
+// GetArticles
 // @Summary Get multiple articles
 // @Produce  json
 // @Param tag_id body int false "TagID"
@@ -121,6 +123,7 @@ type AddArticleForm struct {
 	State         int    `form:"state" valid:"Range(0,1)"`
 }
 
+// AddArticle
 // @Summary Add article
 // @Produce  json
 // @Param tag_id body int true "TagID"
@@ -184,6 +187,7 @@ type EditArticleForm struct {
 	State         int    `form:"state" valid:"Range(0,1)"`
 }
 
+// EditArticle
 // @Summary Update article
 // @Produce  json
 // @Param id path int true "ID"
@@ -249,6 +253,7 @@ func EditArticle(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
 
+// DeleteArticle
 // @Summary Delete article
 // @Produce  json
 // @Param id path int true "ID"

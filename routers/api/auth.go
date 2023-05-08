@@ -17,6 +17,7 @@ type auth struct {
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
+// GetAuth
 // @Summary Get Auth
 // @Produce  json
 // @Param username query string true "userName"

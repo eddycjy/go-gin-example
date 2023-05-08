@@ -3,9 +3,9 @@ package v1
 import (
 	"net/http"
 
-	"github.com/unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
+	"github.com/unknwon/com"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/app"
 	"github.com/EDDYCJY/go-gin-example/pkg/e"
@@ -16,6 +16,7 @@ import (
 	"github.com/EDDYCJY/go-gin-example/service/tag_service"
 )
 
+// GetTags
 // @Summary Get multiple article tags
 // @Produce  json
 // @Param name query string false "Name"
@@ -61,6 +62,7 @@ type AddTagForm struct {
 	State     int    `form:"state" valid:"Range(0,1)"`
 }
 
+// AddTag
 // @Summary Add article tag
 // @Produce  json
 // @Param name body string true "Name"
@@ -112,6 +114,7 @@ type EditTagForm struct {
 	State      int    `form:"state" valid:"Range(0,1)"`
 }
 
+// EditTag
 // @Summary Update article tag
 // @Produce  json
 // @Param id path int true "ID"
@@ -160,6 +163,7 @@ func EditTag(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
 
+// DeleteTag
 // @Summary Delete article tag
 // @Produce  json
 // @Param id path int true "ID"
@@ -197,6 +201,7 @@ func DeleteTag(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
 
+// ExportTag
 // @Summary Export article tag
 // @Produce  json
 // @Param name body string false "Name"
@@ -229,6 +234,7 @@ func ExportTag(c *gin.Context) {
 	})
 }
 
+// ImportTag
 // @Summary Import article tag
 // @Produce  json
 // @Param file body file true "Excel File"
