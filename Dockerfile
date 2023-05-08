@@ -1,9 +1,9 @@
-FROM golang:latest
+FROM golang:1.20
 
-ENV GOPROXY https://goproxy.cn,direct
-WORKDIR $GOPATH/src/github.com/EDDYCJY/go-gin-example
-COPY . $GOPATH/src/github.com/EDDYCJY/go-gin-example
-RUN go build .
+RUN go install github.com/cosmtrek/air@latest
 
-EXPOSE 8000
-ENTRYPOINT ["./go-gin-example"]
+WORKDIR /app/
+COPY . .
+RUN go mod vendor
+
+CMD ["air"]

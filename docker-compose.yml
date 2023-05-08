@@ -1,0 +1,54 @@
+version: '3.3'
+services:
+    db:
+        image: mysql:8.0
+        cap_add:
+            - SYS_NICE
+        restart: always
+        environment:
+            - MYSQL_DATABASE=blog
+            - MYSQL_ROOT_PASSWORD=password@123
+        ports:
+            - '3306:3306'
+        volumes:
+            - db:/var/lib/mysql
+            - ./docs/sql/blog.sql:/docker-entrypoint-initdb.d/init.sql
+        stdin_open: true
+        tty: true
+        hostname: mysql
+        networks:
+            bridge:
+    cache:
+        image: redis:6.2-bullseye
+        restart: "on-failure"
+        ports:
+            - '6379:6379'
+        command: redis-server --save 20 1 --loglevel warning --requirepass password@123
+        volumes:
+            - cache:/data
+        stdin_open: true
+        tty: true
+        hostname: redis
+        networks:
+            bridge:
+    app:
+        restart: "no"
+        build:
+            dockerfile: Dockerfile
+            context: .
+        volumes:
+            - ./:/app
+        networks:
+            bridge:
+        ports:
+            - "8000:8000"
+networks:
+    bridge:
+        driver: bridge
+volumes:
+    db:
+        driver: local
+    cache:
+        driver: local
+    app:
+        driver: local
