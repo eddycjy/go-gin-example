@@ -1,102 +1,157 @@
 # github.com/360EntSecGroup-Skylar/excelize v1.3.1-0.20180527032555-9e463b461434
+## explicit
 github.com/360EntSecGroup-Skylar/excelize
 # github.com/PuerkitoBio/purell v1.1.1-0.20180310210909-975f53781597
+## explicit
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
+## explicit
 github.com/PuerkitoBio/urlesc
 # github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+## explicit
 github.com/alecthomas/template
 github.com/alecthomas/template/parse
 # github.com/astaxie/beego v1.9.3-0.20171218111859-f16688817aa4
+## explicit
 github.com/astaxie/beego/validation
 # github.com/boombuler/barcode v1.0.1-0.20180315051053-3c06908149f7
+## explicit
 github.com/boombuler/barcode
 github.com/boombuler/barcode/qr
 github.com/boombuler/barcode/utils
+# github.com/denisenkom/go-mssqldb v0.0.0-20190920000552-128d9f4ae1cd
+## explicit; go 1.11
 # github.com/dgrijalva/jwt-go v3.1.0+incompatible
+## explicit
 github.com/dgrijalva/jwt-go
+# github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5
+## explicit
 # github.com/gin-contrib/sse v0.1.0
+## explicit; go 1.12
 github.com/gin-contrib/sse
 # github.com/gin-gonic/gin v1.4.0
+## explicit; go 1.12
 github.com/gin-gonic/gin
 github.com/gin-gonic/gin/binding
 github.com/gin-gonic/gin/internal/json
 github.com/gin-gonic/gin/render
 # github.com/go-ini/ini v1.32.1-0.20180214101753-32e4be5f41bb
+## explicit
 github.com/go-ini/ini
 # github.com/go-openapi/jsonpointer v0.17.0
+## explicit
 github.com/go-openapi/jsonpointer
 # github.com/go-openapi/jsonreference v0.19.0
+## explicit
 github.com/go-openapi/jsonreference
 # github.com/go-openapi/spec v0.19.0
+## explicit
 github.com/go-openapi/spec
 # github.com/go-openapi/swag v0.17.0
+## explicit
 github.com/go-openapi/swag
 # github.com/go-sql-driver/mysql v1.4.1-0.20190510102335-877a9775f068
+## explicit
 github.com/go-sql-driver/mysql
 # github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+## explicit
 github.com/golang/freetype
 github.com/golang/freetype/raster
 github.com/golang/freetype/truetype
 # github.com/golang/protobuf v1.3.1
+## explicit
 github.com/golang/protobuf/proto
 # github.com/gomodule/redigo v2.0.1-0.20180401191855-9352ab68be13+incompatible
+## explicit
 github.com/gomodule/redigo/internal
 github.com/gomodule/redigo/redis
 # github.com/jinzhu/gorm v0.0.0-20180213101209-6e1387b44c64
+## explicit
 github.com/jinzhu/gorm
 github.com/jinzhu/gorm/dialects/mysql
 # github.com/jinzhu/inflection v0.0.0-20170102125226-1c35d901db3d
+## explicit
 github.com/jinzhu/inflection
+# github.com/jinzhu/now v1.0.1
+## explicit; go 1.12
 # github.com/json-iterator/go v1.1.7
+## explicit; go 1.12
 github.com/json-iterator/go
+# github.com/lib/pq v1.2.0
+## explicit
 # github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329
+## explicit
 github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
 # github.com/mattn/go-isatty v0.0.8
+## explicit
 github.com/mattn/go-isatty
+# github.com/mattn/go-sqlite3 v1.11.0
+## explicit
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
+## explicit
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
+## explicit
 github.com/modern-go/reflect2
+# github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826
+## explicit
 # github.com/pkg/errors v0.8.1
+## explicit
 github.com/pkg/errors
+# github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
+## explicit
 # github.com/swaggo/gin-swagger v1.2.0
+## explicit
 github.com/swaggo/gin-swagger
 github.com/swaggo/gin-swagger/swaggerFiles
 # github.com/swaggo/swag v1.5.1
+## explicit
 github.com/swaggo/swag
 # github.com/tealeg/xlsx v1.0.4-0.20180419195153-f36fa3be8893
+## explicit
 github.com/tealeg/xlsx
 # github.com/ugorji/go/codec v1.1.5-pre
+## explicit
 github.com/ugorji/go/codec
 # github.com/unknwon/com v1.0.1
+## explicit
 github.com/unknwon/com
 # golang.org/x/image v0.0.0-20180628062038-cc896f830ced
+## explicit
 golang.org/x/image/font
 golang.org/x/image/math/fixed
 # golang.org/x/net v0.0.0-20190611141213-3f473d35a33a
+## explicit; go 1.11
 golang.org/x/net/context
 golang.org/x/net/idna
 golang.org/x/net/webdav
 golang.org/x/net/webdav/internal/xml
 # golang.org/x/sys v0.0.0-20190921204832-2dccfee4fd3e
+## explicit; go 1.12
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
+## explicit
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
 # golang.org/x/tools v0.0.0-20190611222205-d73e1c7e250b
+## explicit; go 1.11
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/buildutil
 golang.org/x/tools/go/internal/cgo
 golang.org/x/tools/go/loader
 # google.golang.org/appengine v1.6.3
+## explicit
 google.golang.org/appengine/cloudsql
 # gopkg.in/go-playground/validator.v8 v8.18.2
+## explicit
 gopkg.in/go-playground/validator.v8
+# gopkg.in/ini.v1 v1.47.0
+## explicit
 # gopkg.in/yaml.v2 v2.2.2
+## explicit
 gopkg.in/yaml.v2
