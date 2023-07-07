@@ -155,10 +155,7 @@ func (t *Tag) Import(r io.Reader) error {
 	for irow, row := range rows {
 		if irow > 0 {
 			var data []string
-			for _, cell := range row {
-				data = append(data, cell)
-			}
-
+			data = append(data, row...)
 			models.AddTag(data[1], 1, data[2])
 		}
 	}
