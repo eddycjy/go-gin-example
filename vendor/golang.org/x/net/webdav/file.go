@@ -12,6 +12,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -162,6 +163,7 @@ type memFS struct {
 //   - "/", "foo", false
 //   - "/foo/", "bar", false
 //   - "/foo/bar/", "x", true
+//
 // The frag argument will be empty only if dir is the root node and the walk
 // ends at that root node.
 func (fs *memFS) walk(op, fullname string, f func(dir *memFSNode, frag string, final bool) error) error {
@@ -272,8 +274,14 @@ func (fs *memFS) OpenFile(ctx context.Context, name string, flag int, perm os.Fi
 	var n *memFSNode
 	if dir == nil {
 		// We're opening the root.
-		if flag&(os.O_WRONLY|os.O_RDWR) != 0 {
-			return nil, os.ErrPermission
+		if runtime.GOOS == "zos" {
+			if flag&os.O_WRONLY != 0 {
+				return nil, os.ErrPermission
+			}
+		} else {
+			if flag&(os.O_WRONLY|os.O_RDWR) != 0 {
+				return nil, os.ErrPermission
+			}
 		}
 		n, frag = &fs.root, "/"
 
