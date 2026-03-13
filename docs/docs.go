@@ -58,7 +58,7 @@ var doc = `{
                         "name": "created_by",
                         "in": "body",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
