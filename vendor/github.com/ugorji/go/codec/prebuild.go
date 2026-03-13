@@ -2,6 +2,13 @@
 
 package main
 
+// prebuild.go generates sort implementations for
+// various slice types and combination slice+reflect.Value types.
+//
+// The combination slice+reflect.Value types are used
+// during canonical encode, and the others are used during fast-path
+// encoding of map keys.
+
 import (
 	"bytes"
 	"go/format"
@@ -11,21 +18,26 @@ import (
 	"text/template"
 )
 
+// genInternalSortableTypes returns the types
+// that are used for fast-path canonical's encoding of maps.
+//
+// For now, we only support the highest sizes for
+// int64, uint64, float64, bool, string, bytes.
 func genInternalSortableTypes() []string {
 	return []string{
 		"string",
-		"float32",
+		// "float32",
 		"float64",
-		"uint",
-		"uint8",
-		"uint16",
-		"uint32",
+		// "uint",
+		// "uint8",
+		// "uint16",
+		// "uint32",
 		"uint64",
 		"uintptr",
-		"int",
-		"int8",
-		"int16",
-		"int32",
+		// "int",
+		// "int8",
+		// "int16",
+		// "int32",
 		"int64",
 		"bool",
 		"time",
@@ -33,6 +45,11 @@ func genInternalSortableTypes() []string {
 	}
 }
 
+// genInternalSortablePlusTypes returns the types
+// that are used for reflection-based canonical's encoding of maps.
+//
+// For now, we only support the highest sizes for
+// int64, uint64, float64, bool, string, bytes.
 func genInternalSortablePlusTypes() []string {
 	return []string{
 		"string",
@@ -107,9 +124,9 @@ func run(fnameIn, fnameOut string) {
 	bout, err := format.Source(out.Bytes())
 	if err != nil {
 		fout.Write(out.Bytes()) // write out if error, so we can still see.
-		// w.Write(bout) // write out if error, as much as possible, so we can still see.
 	}
 	chkerr(err)
+	// write out if error, as much as possible, so we can still see.
 	_, err = fout.Write(bout)
 	chkerr(err)
 }

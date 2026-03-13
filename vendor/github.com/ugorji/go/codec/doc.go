@@ -16,9 +16,7 @@ Supported Serialization formats are:
 
 This package will carefully use 'package unsafe' for performance reasons in specific places.
 You can build without unsafe use by passing the safe or appengine tag
-i.e. 'go install -tags=safe ...'. Note that unsafe is only supported for the last 4
-go releases e.g. current go release is go 1.12, so we support unsafe use only from
-go 1.9+ . This is because supporting unsafe requires knowledge of implementation details.
+i.e. 'go install -tags=safe ...'.
 
 For detailed usage information, read the primer at http://ugorji.net/blog/go-codec-primer .
 
@@ -28,12 +26,12 @@ the standard library (ie json, xml, gob, etc).
 Rich Feature Set includes:
 
   - Simple but extremely powerful and feature-rich API
-  - Support for go1.4 and above, while selectively using newer APIs for later releases
+  - Support for go 1.4 and above, while selectively using newer APIs for later releases
   - Excellent code coverage ( > 90% )
   - Very High Performance.
     Our extensive benchmarks show us outperforming Gob, Json, Bson, etc by 2-4X.
   - Careful selected use of 'unsafe' for targeted performance gains.
-    100% mode exists where 'unsafe' is not used at all.
+  - 100% safe mode supported, where 'unsafe' is not used at all.
   - Lock-free (sans mutex) concurrency for scaling to 100's of cores
   - In-place updates during decode, with option to zero value in maps and slices prior to decode
   - Coerce types where appropriate
@@ -58,7 +56,7 @@ Rich Feature Set includes:
     (to support structured streams with fields encoded as numeric codes)
   - Comprehensive support for anonymous fields
   - Fast (no-reflection) encoding/decoding of common maps and slices
-  - Code-generation for faster performance.
+  - Code-generation for faster performance, supported in go 1.6+
   - Support binary (e.g. messagepack, cbor) and text (e.g. json) formats
   - Support indefinite-length formats to enable true streaming
     (for formats which support it e.g. json, cbor)
@@ -96,13 +94,16 @@ encoded as an empty map because it has no exported fields, while UUID
 would be encoded as a string. However, with extension support, you can
 encode any of these however you like.
 
+There is also seamless support provided for registering an extension (with a tag)
+but letting the encoding mechanism default to the standard way.
+
 Custom Encoding and Decoding
 
 This package maintains symmetry in the encoding and decoding halfs.
 We determine how to encode or decode by walking this decision tree
 
-  - is type a codec.Selfer?
   - is there an extension registered for the type?
+  - is type a codec.Selfer?
   - is format binary, and is type a encoding.BinaryMarshaler and BinaryUnmarshaler?
   - is format specifically json, and is type a encoding/json.Marshaler and Unmarshaler?
   - is format text-based, and type an encoding.TextMarshaler and TextUnmarshaler?
@@ -207,30 +208,6 @@ Running Benchmarks
     
 Please see http://github.com/ugorji/go-codec-bench .
 
-Managing Binary Size
-
-This package adds some size to any binary that depends on it.
-This is because we include an auto-generated file: `fast-path.generated.go`
-to help with performance when encoding/decoding slices and maps of
-built in numeric, boolean, string and interface{} types.
-
-Prior to 2019-05-16, this package could add about 11MB to the size of your binaries.
-We have now trimmed that in half, and the package contributes about 5.5MB.
-
-You can override this by building (or running tests and benchmarks)
-with the tag: `notfastpath`.
-
-    go install -tags notfastpath
-    go build -tags notfastpath
-    go test -tags notfastpath
-
-With the tag `notfastpath`, we trim that size to about 2.9MB.
-
-Be aware that, at least in our representative microbenchmarks for cbor (for example),
-passing `notfastpath` tag causes up to 33% increase in decoding and
-50% increase in encoding speeds.
-YMMV.
-
 Caveats
 
 Struct fields matching the following are ignored during encoding and decoding
@@ -247,4 +224,3 @@ with some caveats. See Encode documentation.
 
 */
 package codec
-
