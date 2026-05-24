@@ -1,7 +1,9 @@
 package setting
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/go-ini/ini"
@@ -74,6 +76,23 @@ func Setup() {
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
 	mapTo("redis", RedisSetting)
+
+	// Override sensitive settings from environment variables
+	if jwtSecret := os.Getenv("JWT_SECRET"); jwtSecret != "" {
+		AppSetting.JwtSecret = jwtSecret
+	}
+	if AppSetting.JwtSecret == "" {
+		fmt.Fprintf(os.Stderr, "fatal: JWT_SECRET is not set and no default is configured. Generate one with: openssl rand -base64 32\n")
+		os.Exit(1)
+	}
+
+	if dbPassword := os.Getenv("DB_PASSWORD"); dbPassword != "" {
+		DatabaseSetting.Password = dbPassword
+	}
+	if DatabaseSetting.Password == "" {
+		fmt.Fprintf(os.Stderr, "fatal: DB_PASSWORD is not set and no default is configured. Please set DB_PASSWORD environment variable.\n")
+		os.Exit(1)
+	}
 
 	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
