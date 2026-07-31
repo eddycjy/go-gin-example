@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:8
+    environment:
+       MYSQL_ROOT_PASSWORD: rootroot
+       MYSQL_DATABASE: blog
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docs/sql/blog.sql:/docker-entrypoint-initdb.d/blog.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app:
+    environment:
+      GIN_MODE: release
+    build: .
+    ports: 
+      - "8000:8000"
+    volumes:
+      - ./conf/app.docker.ini:/app/conf/app.ini:ro
+      - app_runtime:/app/runtime
+      - app_upload:/app/upload
+      - app_export:/app/export
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+volumes:
+  mysql_data:
+  app_runtime:
+  app_upload:
+  app_export:
